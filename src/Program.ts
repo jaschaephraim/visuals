@@ -2,10 +2,6 @@ import fragmentShader from 'shaders/main.frag';
 import vertexShader from 'shaders/main.vert';
 
 class Program {
-  private window: Window;
-
-  private canvas: HTMLCanvasElement;
-
   private webgl: WebGL2RenderingContext;
 
   private lineIndexArray: Uint16Array;
@@ -18,36 +14,21 @@ class Program {
 
   private program: WebGLProgram;
 
-  private aspectRatio = 1;
+  private aspectRatio: number;
 
   private gridDimension = 100;
 
-  constructor(window: Window, canvas: HTMLCanvasElement) {
-    this.window = window;
-    this.canvas = canvas;
-    this.resizeCanvas();
-
-    const webgl = canvas.getContext('webgl2');
-    if (!webgl) {
-      throw new Error('unable to get webgl context');
-    }
+  constructor(webgl: WebGL2RenderingContext, aspectRatio: number) {
     this.webgl = webgl;
+    this.aspectRatio = aspectRatio;
 
     this.lineIndexArray = this.generateLineIndexArray();
     this.triangleIndexArray = this.generateTriangleIndexArray();
 
-    this.lineIndexBuffer = this.createLineIndexBuffer();
-    this.triangleIndexBuffer = this.createTriangleIndexBuffer();
+    this.lineIndexBuffer = this.createIndexBuffer(this.lineIndexArray);
+    this.triangleIndexBuffer = this.createIndexBuffer(this.triangleIndexArray);
 
     this.program = this.createProgram();
-    this.draw(0);
-  }
-
-  private resizeCanvas() {
-    const boundary = this.canvas.getBoundingClientRect();
-    this.canvas.width = boundary.width * this.window.devicePixelRatio;
-    this.canvas.height = boundary.height * this.window.devicePixelRatio;
-    // this.aspectRatio = this.canvas.width / this.canvas.height;
   }
 
   private generateLineIndexArray() {
@@ -86,9 +67,7 @@ class Program {
     return new Uint16Array(elements);
   }
 
-  private draw(t: number) {
-    this.window.requestAnimationFrame(() => this.draw(t + 1));
-
+  public draw(t: number) {
     const timeUniform = this.webgl.getUniformLocation(this.program, 'u_t');
     const isFaceUniform = this.webgl.getUniformLocation(this.program, 'u_isFace');
     
@@ -107,24 +86,14 @@ class Program {
     this.webgl.drawElements(this.webgl.LINES, this.lineIndexArray.length, this.webgl.UNSIGNED_SHORT, 0);
   }
 
-  private createLineIndexBuffer() {
-    const lineIndexBuffer = this.webgl.createBuffer();
-    if (!lineIndexBuffer) {
-      throw new Error('unable to create line index buffer');
+  private createIndexBuffer(indexArray: Uint16Array) {
+    const indexBuffer = this.webgl.createBuffer();
+    if (!indexBuffer) {
+      throw new Error('unable to create index buffer');
     }
-    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, lineIndexBuffer);
-    this.webgl.bufferData(this.webgl.ELEMENT_ARRAY_BUFFER, this.lineIndexArray, this.webgl.STATIC_DRAW);
-    return lineIndexBuffer;
-  }
-
-  private createTriangleIndexBuffer() {
-    const triangleIndexBuffer = this.webgl.createBuffer();
-    if (!triangleIndexBuffer) {
-      throw new Error('unable to create line index buffer');
-    }
-    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, triangleIndexBuffer);
-    this.webgl.bufferData(this.webgl.ELEMENT_ARRAY_BUFFER, this.triangleIndexArray, this.webgl.STATIC_DRAW);
-    return triangleIndexBuffer;
+    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    this.webgl.bufferData(this.webgl.ELEMENT_ARRAY_BUFFER, indexArray, this.webgl.STATIC_DRAW);
+    return indexBuffer;
   }
 
   private createProgram() {

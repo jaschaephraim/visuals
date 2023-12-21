@@ -9,10 +9,10 @@
   <body style="margin: 0; padding: 0">
     <canvas id="visuals" style="width: 100vw; height: 100vh"></canvas>
     <script type="module">
-      import Program from './src/Program.ts';
+      import { render } from './src/main.ts';
 
       const canvas = document.getElementById('visuals');
-      new Program(window, canvas);
+      render(window, canvas);
     </script>
   </body>
 </html>
