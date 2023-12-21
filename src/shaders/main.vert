@@ -12,7 +12,7 @@ const float u_fov = 2.5;
 const float u_near = 0.1;
 const float u_far = 100.0;
 
-const float speed = 0.01;
+const float speed = 0.005;
 const float zOffset = -0.3;
 
 const float noiseFreqA = 3.0;

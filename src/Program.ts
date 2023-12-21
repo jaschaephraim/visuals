@@ -8,7 +8,13 @@ class Program {
 
   private webgl: WebGL2RenderingContext;
 
-  private indexArray: Uint16Array;
+  private lineIndexArray: Uint16Array;
+
+  private triangleIndexArray: Uint16Array;
+
+  private lineIndexBuffer: WebGLBuffer;
+
+  private triangleIndexBuffer: WebGLBuffer;
 
   private program: WebGLProgram;
 
@@ -27,7 +33,12 @@ class Program {
     }
     this.webgl = webgl;
 
-    this.indexArray = this.generateIndexArray();
+    this.lineIndexArray = this.generateLineIndexArray();
+    this.triangleIndexArray = this.generateTriangleIndexArray();
+
+    this.lineIndexBuffer = this.createLineIndexBuffer();
+    this.triangleIndexBuffer = this.createTriangleIndexBuffer();
+
     this.program = this.createProgram();
     this.draw(0);
   }
@@ -39,7 +50,7 @@ class Program {
     // this.aspectRatio = this.canvas.width / this.canvas.height;
   }
 
-  private generateIndexArray() {
+  private generateLineIndexArray() {
     const lastGridIndex = this.gridDimension - 1;
     const elements: number[] = [];
     for (let i = 0; i < this.gridDimension * this.gridDimension; i++) {
@@ -55,15 +66,65 @@ class Program {
     return new Uint16Array(elements);
   }
 
+  private generateTriangleIndexArray() {
+    const lastGridIndex = this.gridDimension - 1;
+    const elements: number[] = [];
+    for (let i = 0; i < this.gridDimension * this.gridDimension; i++) {
+      if (i % this.gridDimension < lastGridIndex && Math.floor(i / this.gridDimension) < lastGridIndex) {
+        const nw = i;
+        const ne = i + 1;
+        const se = i + this.gridDimension + 1;
+        const sw = i + this.gridDimension;
+        elements.push(nw);
+        elements.push(ne);
+        elements.push(sw);
+        elements.push(se);
+        elements.push(sw);
+        elements.push(ne);
+      }
+    }
+    return new Uint16Array(elements);
+  }
+
   private draw(t: number) {
     this.window.requestAnimationFrame(() => this.draw(t + 1));
 
     const timeUniform = this.webgl.getUniformLocation(this.program, 'u_t');
+    const isFaceUniform = this.webgl.getUniformLocation(this.program, 'u_isFace');
+    
     this.webgl.uniform1i(timeUniform, t);
 
-    this.webgl.clearColor(0, 0, 0, 1);
+    // this.webgl.clearColor(0, 0, 0, 1);
+    this.webgl.clearColor(0.9803921569, 0.9215686275, 0.7843137255, 1);
     this.webgl.clear(this.webgl.COLOR_BUFFER_BIT);
-    this.webgl.drawElements(this.webgl.LINES, this.indexArray.length, this.webgl.UNSIGNED_SHORT, 0);
+
+    this.webgl.uniform1i(isFaceUniform, 1);
+    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, this.triangleIndexBuffer);
+    this.webgl.drawElements(this.webgl.TRIANGLES, this.triangleIndexArray.length, this.webgl.UNSIGNED_SHORT, 0);
+
+    this.webgl.uniform1i(isFaceUniform, 0);
+    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, this.lineIndexBuffer);
+    this.webgl.drawElements(this.webgl.LINES, this.lineIndexArray.length, this.webgl.UNSIGNED_SHORT, 0);
+  }
+
+  private createLineIndexBuffer() {
+    const lineIndexBuffer = this.webgl.createBuffer();
+    if (!lineIndexBuffer) {
+      throw new Error('unable to create line index buffer');
+    }
+    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, lineIndexBuffer);
+    this.webgl.bufferData(this.webgl.ELEMENT_ARRAY_BUFFER, this.lineIndexArray, this.webgl.STATIC_DRAW);
+    return lineIndexBuffer;
+  }
+
+  private createTriangleIndexBuffer() {
+    const triangleIndexBuffer = this.webgl.createBuffer();
+    if (!triangleIndexBuffer) {
+      throw new Error('unable to create line index buffer');
+    }
+    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, triangleIndexBuffer);
+    this.webgl.bufferData(this.webgl.ELEMENT_ARRAY_BUFFER, this.triangleIndexArray, this.webgl.STATIC_DRAW);
+    return triangleIndexBuffer;
   }
 
   private createProgram() {
@@ -113,10 +174,6 @@ class Program {
 
     const gridSizeUniform = this.webgl.getUniformLocation(program, 'u_gridSize');
     this.webgl.uniform1i(gridSizeUniform, this.gridDimension);
-
-    const indexBuffer = this.webgl.createBuffer();
-    this.webgl.bindBuffer(this.webgl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    this.webgl.bufferData(this.webgl.ELEMENT_ARRAY_BUFFER, this.indexArray, this.webgl.STATIC_DRAW);
   
     return program;
   }
