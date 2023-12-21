@@ -12,10 +12,13 @@ const float u_fov = 2.5;
 const float u_near = 0.1;
 const float u_far = 100.0;
 
-const float zOffset = -0.3;
-const float noiseFreq = 6.0;
-const float noiseAmp = 0.05;
 const float speed = 0.01;
+const float zOffset = -0.3;
+
+const float noiseFreqA = 3.0;
+const float noiseAmpA = 0.05;
+const float noiseFreqB = 8.0;
+const float noiseAmpB = 0.03;
 
 void main() {
   int x = gl_VertexID % u_gridSize;
@@ -30,7 +33,8 @@ void main() {
   
   float yOffset = mod(scaledTime, cellSize);
   float zOffset = -0.3;
-  float zDisplacement = snoise(vec2(xNorm / u_aspectRatio, yNorm + cellOffset) * noiseFreq) * noiseAmp;
+  vec2 noiseSample = vec2(xNorm / u_aspectRatio,  yNorm + cellOffset);
+  float zDisplacement = snoise(noiseSample * noiseFreqA) * noiseAmpA + snoise(noiseSample * noiseFreqB) * noiseAmpB;
   vec4 position = vec4(xNorm / u_aspectRatio, yNorm - yOffset, zOffset + zDisplacement, 1.0);
 
   float cosTilt = cos(u_tiltAngle);
