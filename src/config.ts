@@ -1,13 +1,25 @@
 import fragmentShader from 'shaders/main.frag';
 import vertexShader from 'shaders/main.vert';
 
+const {
+  ARRAY_BUFFER,
+  ELEMENT_ARRAY_BUFFER,
+  FLOAT,
+  FRAGMENT_SHADER,
+  INT,
+  LINES,
+  TRIANGLES,
+  VERTEX_SHADER,
+} = WebGL2RenderingContext;
+
 const GRID_SIZE = 100;
+const HORIZON = -0.5;
 
 export type ShaderConfig = { name: string; type: number; source: string };
 
 export type UniformConfig = { name: string, type: number; value: number };
 
-export type BufferConfig = { name: string, type: number; values: Float32Array | Uint16Array };
+export type BufferConfig = { name: string, type: number, mode: number; values: Float32Array | Uint16Array };
 
 export type ProgramConfig = {
   shaders: ShaderConfig[],
@@ -55,46 +67,61 @@ const config: ProgramConfig = {
   shaders: [
     {
       name: 'vertex',
-      type: WebGL2RenderingContext.VERTEX_SHADER,
+      type: VERTEX_SHADER,
       source: vertexShader,
     },
     {
       name: 'fragment',
-      type: WebGL2RenderingContext.FRAGMENT_SHADER,
+      type: FRAGMENT_SHADER,
       source: fragmentShader,
     },
   ],
   uniforms: [
     {
       name: 'u_aspectRatio',
-      type: WebGL2RenderingContext.FLOAT,
+      type: FLOAT,
       value: 1,
     },
     {
       name: 'u_gridSize',
-      type: WebGL2RenderingContext.INT,
+      type: INT,
       value: GRID_SIZE,
     },
     {
       name: 'u_bufferIndex',
-      type: WebGL2RenderingContext.INT,
+      type: INT,
       value: 0,
     },
     {
       name: 'u_t',
-      type: WebGL2RenderingContext.INT,
+      type: INT,
       value: 0,
     }
   ],
   buffers: [
     {
+      name: 'background',
+      type: ARRAY_BUFFER,
+      mode: TRIANGLES,
+      values: new Float32Array([
+        -1, 1, 0, 1,
+        1, 1, 0, 1,
+        -1, HORIZON, 0, 1,
+        1, HORIZON, 0, 1,
+        -1, HORIZON, 0, 1,
+        1, 1, -1, 1,
+      ]),
+    },
+    {
       name: 'faces',
-      type: WebGL2RenderingContext.TRIANGLES,
+      type: ELEMENT_ARRAY_BUFFER,
+      mode: TRIANGLES,
       values: generateTriangleIndexArray(),
     },
     {
       name: 'edges',
-      type: WebGL2RenderingContext.LINES,
+      type: ELEMENT_ARRAY_BUFFER,
+      mode: LINES,
       values: generateLineIndexArray(),
     }
   ]
