@@ -1,11 +1,11 @@
-import Program from "./Program";
-import config from "./config";
+import Program from './Program';
+import config from './config';
 
 function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   const boundary = canvas.getBoundingClientRect();
   canvas.width = boundary.width * window.devicePixelRatio;
   canvas.height = boundary.height * window.devicePixelRatio;
-  
+
   const aspectRatio = canvas.width / canvas.height;
   return aspectRatio;
 }
@@ -22,6 +22,6 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
   const drawFrame = (t: number) => {
     window.requestAnimationFrame(() => drawFrame(t + 1));
     program.draw(t);
-  }
+  };
   drawFrame(0);
 }

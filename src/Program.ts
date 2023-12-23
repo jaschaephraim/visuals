@@ -1,4 +1,9 @@
-import { BufferConfig, ProgramConfig, ShaderConfig, UniformConfig } from './config';
+import {
+  BufferConfig,
+  ProgramConfig,
+  ShaderConfig,
+  UniformConfig,
+} from './config';
 
 const {
   ARRAY_BUFFER,
@@ -25,7 +30,11 @@ class Program {
 
   private buffers: Record<string, WebGLBuffer> = {};
 
-  constructor(webgl: WebGL2RenderingContext, config: ProgramConfig, aspectRatio: number) {
+  constructor(
+    webgl: WebGL2RenderingContext,
+    config: ProgramConfig,
+    aspectRatio: number
+  ) {
     this.webgl = webgl;
     this.config = config;
     this.aspectRatio = aspectRatio;
@@ -35,20 +44,28 @@ class Program {
       throw new Error('unable to create program');
     }
     this.program = program;
-    
-    this.config.shaders.forEach((shaderConfig) => this.attachShader(shaderConfig));
+
+    this.config.shaders.forEach((shaderConfig) =>
+      this.attachShader(shaderConfig)
+    );
     this.linkAndUseProgram();
-    
-    this.config.uniforms.forEach((uniformConfig) => this.createUniform(uniformConfig));
-    this.config.buffers.forEach((bufferConfig) => this.createBuffer(bufferConfig));
+
+    this.config.uniforms.forEach((uniformConfig) =>
+      this.createUniform(uniformConfig)
+    );
+    this.config.buffers.forEach((bufferConfig) =>
+      this.createBuffer(bufferConfig)
+    );
   }
 
   public draw(t: number) {
     const timeUniform = this.getUniform('u_t');
-    this.webgl.uniform1i(timeUniform, t);    
+    this.webgl.uniform1i(timeUniform, t);
     this.webgl.clearColor(0.9803921569, 0.9215686275, 0.7843137255, 1);
     this.webgl.clear(COLOR_BUFFER_BIT);
-    this.config.buffers.forEach((bufferConfig, i) => this.drawBuffer(bufferConfig, i));
+    this.config.buffers.forEach((bufferConfig, i) =>
+      this.drawBuffer(bufferConfig, i)
+    );
   }
 
   private linkAndUseProgram() {
@@ -89,7 +106,9 @@ class Program {
         this.webgl.uniform1i(uniform, value);
         break;
       default:
-        throw new Error(`could not create uniform ${name}, unexpected type ${type}`);
+        throw new Error(
+          `could not create uniform ${name}, unexpected type ${type}`
+        );
     }
     this.uniforms[name] = uniform;
   }
@@ -112,11 +131,14 @@ class Program {
   private enableVertexAttribute(buffer: WebGLBuffer) {
     const position = this.webgl.getAttribLocation(this.program, 'a_position');
     this.webgl.bindBuffer(ARRAY_BUFFER, buffer);
-    this.webgl.vertexAttribPointer(position, 4, FLOAT, false, 0, 0);
+    this.webgl.vertexAttribPointer(position, 2, FLOAT, false, 0, 0);
     this.webgl.enableVertexAttribArray(position);
   }
 
-  private drawBuffer({ name, type, mode, values }: BufferConfig, index: number) {
+  private drawBuffer(
+    { name, type, mode, values }: BufferConfig,
+    index: number
+  ) {
     const buffer = this.getBuffer(name);
     const bufferIndexUniform = this.getUniform('u_bufferIndex');
 
@@ -128,10 +150,12 @@ class Program {
         this.webgl.drawElements(mode, values.length, UNSIGNED_SHORT, 0);
         break;
       case ARRAY_BUFFER:
-        this.webgl.drawArrays(mode, 0, values.length / 4);
+        this.webgl.drawArrays(mode, 0, values.length / 2);
         break;
       default:
-        throw new Error(`could not draw buffer ${name}, unexpected type ${type}`);
+        throw new Error(
+          `could not draw buffer ${name}, unexpected type ${type}`
+        );
     }
   }
 

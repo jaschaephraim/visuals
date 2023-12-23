@@ -17,14 +17,19 @@ const HORIZON = -0.5;
 
 export type ShaderConfig = { name: string; type: number; source: string };
 
-export type UniformConfig = { name: string, type: number; value: number };
+export type UniformConfig = { name: string; type: number; value: number };
 
-export type BufferConfig = { name: string, type: number, mode: number; values: Float32Array | Uint16Array };
+export type BufferConfig = {
+  name: string;
+  type: number;
+  mode: number;
+  values: Float32Array | Uint16Array;
+};
 
 export type ProgramConfig = {
-  shaders: ShaderConfig[],
-  uniforms: UniformConfig[],
-  buffers: BufferConfig[],
+  shaders: ShaderConfig[];
+  uniforms: UniformConfig[];
+  buffers: BufferConfig[];
 };
 
 function generateLineIndexArray() {
@@ -47,7 +52,10 @@ function generateTriangleIndexArray() {
   const lastGridIndex = GRID_SIZE - 1;
   const elements: number[] = [];
   for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-    if (i % GRID_SIZE < lastGridIndex && Math.floor(i / GRID_SIZE) < lastGridIndex) {
+    if (
+      i % GRID_SIZE < lastGridIndex &&
+      Math.floor(i / GRID_SIZE) < lastGridIndex
+    ) {
       const nw = i;
       const ne = i + 1;
       const se = i + GRID_SIZE + 1;
@@ -96,7 +104,7 @@ const config: ProgramConfig = {
       name: 'u_t',
       type: INT,
       value: 0,
-    }
+    },
   ],
   buffers: [
     {
@@ -104,12 +112,18 @@ const config: ProgramConfig = {
       type: ARRAY_BUFFER,
       mode: TRIANGLES,
       values: new Float32Array([
-        -1, 1, 0, 1,
-        1, 1, 0, 1,
-        -1, HORIZON, 0, 1,
-        1, HORIZON, 0, 1,
-        -1, HORIZON, 0, 1,
-        1, 1, -1, 1,
+        -1,
+        1,
+        1,
+        1,
+        -1,
+        HORIZON,
+        1,
+        HORIZON,
+        -1,
+        HORIZON,
+        1,
+        1,
       ]),
     },
     {
@@ -123,8 +137,8 @@ const config: ProgramConfig = {
       type: ELEMENT_ARRAY_BUFFER,
       mode: LINES,
       values: generateLineIndexArray(),
-    }
-  ]
-}
+    },
+  ],
+};
 
 export default config;

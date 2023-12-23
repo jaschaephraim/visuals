@@ -12,6 +12,7 @@ uniform int u_bufferIndex;
 uniform int u_t;
 
 in vec4 a_position;
+out vec2 v_uv;
 
 const float u_tiltAngle = 1.5;
 const float u_fov = 2.5;
@@ -60,8 +61,9 @@ void main() {
     0.0, 0.0, (2.0 * u_far * u_near) / (u_near - u_far), 0.0
   );
 
-  bool isBackground = u_bufferIndex == 0;
+  bool isBackground = u_bufferIndex == 0;  
   gl_Position = float(isBackground) * a_position
     + float(!isBackground) * projectionMatrix * rotationMatrix * position;
   gl_PointSize = u_aspectRatio;
+  v_uv = a_position.xy;
 }
