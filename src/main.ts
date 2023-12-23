@@ -1,5 +1,5 @@
-import Program from './Program';
-import config from './config';
+import Scene from './Scene';
+import sceneConfig from './configs/scene-config';
 
 function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   const boundary = canvas.getBoundingClientRect();
@@ -18,10 +18,6 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
     throw new Error('unable to get webgl context');
   }
 
-  const program = new Program(webgl, config, aspectRatio);
-  const drawFrame = (t: number) => {
-    window.requestAnimationFrame(() => drawFrame(t + 1));
-    program.draw(t);
-  };
-  drawFrame(0);
+  const scene = new Scene(window, webgl, sceneConfig, aspectRatio);
+  scene.run();
 }

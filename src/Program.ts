@@ -3,7 +3,7 @@ import {
   ProgramConfig,
   ShaderConfig,
   UniformConfig,
-} from './config';
+} from './types';
 
 const {
   ARRAY_BUFFER,
@@ -52,14 +52,18 @@ class Program {
     this.config.shaders.forEach((shaderConfig) =>
       this.attachShader(shaderConfig)
     );
-    this.linkAndUseProgram();
+    this.linkProgram();
+  }
 
+  public use() {
+    this.webgl.useProgram(this.program);
     this.config.uniforms.forEach((uniformConfig) =>
       this.createUniform(uniformConfig)
     );
     this.config.buffers.forEach((bufferConfig) =>
       this.createBuffer(bufferConfig)
     );
+    this.config.buffers.forEach((bufferConfig) => this.setBuffer(bufferConfig));
   }
 
   public draw(t: number) {
@@ -77,13 +81,12 @@ class Program {
     );
   }
 
-  private linkAndUseProgram() {
+  private linkProgram() {
     this.webgl.linkProgram(this.program);
     if (!this.webgl.getProgramParameter(this.program, LINK_STATUS)) {
       const infoLog = this.webgl.getProgramInfoLog(this.program);
       throw new Error(`unable to link program:\n${infoLog}`);
     }
-    this.webgl.useProgram(this.program);
   }
 
   private attachShader({ name, type, source }: ShaderConfig) {
@@ -122,19 +125,21 @@ class Program {
     this.uniforms[name] = uniform;
   }
 
-  private createBuffer({ name, type, values }: BufferConfig) {
+  private createBuffer({ name }: BufferConfig) {
     const buffer = this.webgl.createBuffer();
     if (!buffer) {
       throw new Error(`unable to create buffer ${name}`);
     }
+    this.buffers[name] = buffer;
+  }
 
+  private setBuffer({ name, type, values }: BufferConfig) {
+    const buffer = this.getBuffer(name);
     this.webgl.bindBuffer(type, buffer);
     this.webgl.bufferData(type, values, STATIC_DRAW);
-
     if (type === ARRAY_BUFFER) {
       this.enableVertexAttribute(buffer);
     }
-    this.buffers[name] = buffer;
   }
 
   private enableVertexAttribute(buffer: WebGLBuffer) {
