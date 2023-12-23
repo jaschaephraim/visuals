@@ -71,9 +71,9 @@ void main() {
   
   vec4 landscapePosition = getLandscapePosition();
   gl_Position = mat4(
-    a_position,
+    a_position + vec4(0.0, 0.0, 0.9999, 0.0),
     landscapePosition,
-    landscapePosition,
+    landscapePosition + vec4(0.0, 0.0001, 0.0, 0.0),
     vec4(0)
   )[u_bufferIndex]; 
 }

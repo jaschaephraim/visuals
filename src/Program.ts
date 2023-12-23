@@ -9,6 +9,8 @@ const {
   ARRAY_BUFFER,
   COLOR_BUFFER_BIT,
   COMPILE_STATUS,
+  DEPTH_BUFFER_BIT,
+  DEPTH_TEST,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   INT,
@@ -39,6 +41,8 @@ class Program {
     this.config = config;
     this.aspectRatio = aspectRatio;
 
+    this.webgl.enable(DEPTH_TEST);
+
     const program = this.webgl.createProgram();
     if (!program) {
       throw new Error('unable to create program');
@@ -61,8 +65,13 @@ class Program {
   public draw(t: number) {
     const timeUniform = this.getUniform('u_t');
     this.webgl.uniform1i(timeUniform, t);
-    this.webgl.clearColor(0.9803921569, 0.9215686275, 0.7843137255, 1);
-    this.webgl.clear(COLOR_BUFFER_BIT);
+    this.webgl.clearColor(
+      0.984313725490196,
+      0.8980392156862745,
+      0.7647058823529411,
+      1.0
+    );
+    this.webgl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
     this.config.buffers.forEach((bufferConfig, i) =>
       this.drawBuffer(bufferConfig, i)
     );
