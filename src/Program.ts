@@ -7,9 +7,7 @@ import {
 
 const {
   ARRAY_BUFFER,
-  COLOR_BUFFER_BIT,
   COMPILE_STATUS,
-  DEPTH_BUFFER_BIT,
   DEPTH_TEST,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
@@ -69,13 +67,6 @@ class Program {
   public draw(t: number) {
     const timeUniform = this.getUniform('u_t');
     this.webgl.uniform1i(timeUniform, t);
-    this.webgl.clearColor(
-      0.984313725490196,
-      0.8980392156862745,
-      0.7647058823529411,
-      1.0
-    );
-    this.webgl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
     this.config.buffers.forEach((bufferConfig, i) =>
       this.drawBuffer(bufferConfig, i)
     );
@@ -107,7 +98,7 @@ class Program {
   private createUniform({ name, type, value }: UniformConfig) {
     const uniform = this.webgl.getUniformLocation(this.program, name);
     if (!uniform) {
-      throw new Error(`unable to get location of uniform ${name}`);
+      return;
     }
 
     switch (type) {
@@ -174,11 +165,7 @@ class Program {
   }
 
   private getUniform(name: string) {
-    const uniform = this.uniforms[name];
-    if (!uniform) {
-      throw new Error(`uniform ${name} not found`);
-    }
-    return uniform;
+    return this.uniforms[name] ?? null;
   }
 
   private getBuffer(name: string) {

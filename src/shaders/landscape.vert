@@ -24,8 +24,6 @@ const float noiseAmpA = 0.05;
 const float noiseFreqB = 8.0;
 const float noiseAmpB = 0.03;
 
-const vec4 birdCenter = vec4(0.0, 0.25, -0.2, 1.0);
-
 const float cosTilt = cos(u_tiltAngle);
 const float sinTilt = sin(u_tiltAngle);
 const mat4 rotationMatrix = mat4(
@@ -57,14 +55,6 @@ vec4 getLandscapePosition(mat4 projectionMatrix) {
   return projectionMatrix * rotationMatrix * position;
 }
 
-vec4 getBirdPosition(mat4 projectionMatrix) {
-  float t = float(u_t) * 0.005;
-  float x = snoise(vec3(t, 0, 0));
-  float y = snoise(vec3(0, t, 0));
-  float z = snoise(vec3(0, 0, t));
-  return projectionMatrix * rotationMatrix * (birdCenter + vec4(vec3(x, y, z) * vec3(0.3, 0.2, 0.05), 0.0));
-}
-
 void main() {
   mat4 projectionMatrix = mat4(
     f / u_aspectRatio, 0.0, 0.0, 0.0,
@@ -72,16 +62,12 @@ void main() {
     0.0, 0.0, (u_far + u_near) / (u_near - u_far), -1.0,
     0.0, 0.0, (2.0 * u_far * u_near) / (u_near - u_far), 0.0
   );
-
-  gl_PointSize = u_aspectRatio * 4.0;
   
   vec4 landscapePosition = getLandscapePosition(projectionMatrix);
-  vec4 birdPosition = getBirdPosition(projectionMatrix);
-
   gl_Position = mat4(
     landscapePosition,
     landscapePosition + vec4(0.0, 0.0001, 0.0, 0.0),
-    birdPosition,
+    vec4(0),
     vec4(0)
   )[u_bufferIndex]; 
 }

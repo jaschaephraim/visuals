@@ -1,6 +1,8 @@
 import Program from './Program';
 import { SceneConfig } from './types';
 
+const { COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } = WebGL2RenderingContext;
+
 class Scene {
   private window: Window;
 
@@ -34,17 +36,23 @@ class Scene {
     frame(0);
   }
 
-  private renderFrame(t: number) {
-    this.programs.forEach((program) => {
-      program.use();
-      program.draw(t);
-    });
-  }
-
   private linkPrograms() {
     this.config.programs.forEach((programConfig) => {
       const program = new Program(this.webgl, programConfig, this.aspectRatio);
       this.programs.push(program);
+    });
+  }
+
+  private clear() {
+    this.webgl.clearColor(0, 0, 0, 0);
+    this.webgl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+  }
+
+  private renderFrame(t: number) {
+    this.clear();
+    this.programs.forEach((program) => {
+      program.use();
+      program.draw(t);
     });
   }
 }

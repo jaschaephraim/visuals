@@ -22,7 +22,7 @@ void main() {
   out_color = mat4(
     faceColor,
     edgeColor,
-    eerieBlack,
+    vec4(0),
     vec4(0)
   )[u_bufferIndex];
 }

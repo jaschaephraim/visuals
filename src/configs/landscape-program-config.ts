@@ -1,5 +1,5 @@
-import fragmentShader from 'shaders/main.frag';
-import vertexShader from 'shaders/main.vert';
+import fragmentShader from 'shaders/landscape.frag';
+import vertexShader from 'shaders/landscape.vert';
 import { ProgramConfig } from '../types';
 
 const {
@@ -8,7 +8,6 @@ const {
   FRAGMENT_SHADER,
   INT,
   LINES,
-  POINTS,
   TRIANGLES,
   VERTEX_SHADER,
 } = WebGL2RenderingContext;
@@ -101,12 +100,6 @@ const config: ProgramConfig = {
       type: ELEMENT_ARRAY_BUFFER,
       mode: LINES,
       values: generateLineIndexArray(),
-    },
-    {
-      name: 'birds',
-      type: ELEMENT_ARRAY_BUFFER,
-      mode: POINTS,
-      values: new Uint16Array([0]),
     },
   ],
 };
