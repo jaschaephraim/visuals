@@ -1,3 +1,5 @@
+import Stats from 'stats.js';
+
 import Program from './Program';
 import { SceneConfig } from './types';
 
@@ -14,16 +16,20 @@ class Scene {
 
   private aspectRatio: number;
 
+  private stats: Stats | undefined;
+
   constructor(
     window: Window,
     webgl: WebGL2RenderingContext,
     config: SceneConfig,
-    aspectRatio: number
+    aspectRatio: number,
+    stats?: Stats
   ) {
     this.window = window;
     this.webgl = webgl;
-    this.aspectRatio = aspectRatio;
     this.config = config;
+    this.aspectRatio = aspectRatio;
+    this.stats = stats;
 
     this.linkPrograms();
   }
@@ -31,7 +37,10 @@ class Scene {
   public run() {
     const frame = (t: number) => {
       this.window.requestAnimationFrame(() => frame(t + 1));
+
+      this.stats?.begin();
       this.renderFrame(t);
+      this.stats?.end();
     };
     frame(0);
   }
