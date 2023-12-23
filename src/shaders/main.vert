@@ -11,9 +11,6 @@ uniform int u_gridSize;
 uniform int u_bufferIndex;
 uniform int u_t;
 
-in vec4 a_position;
-out vec2 v_uv;
-
 const float u_tiltAngle = 1.5;
 const float u_fov = 2.5;
 const float u_near = 0.1;
@@ -27,7 +24,20 @@ const float noiseAmpA = 0.05;
 const float noiseFreqB = 8.0;
 const float noiseAmpB = 0.03;
 
-vec4 getLandscapePosition() {
+const vec4 birdCenter = vec4(0.0, 0.25, -0.2, 1.0);
+
+const float cosTilt = cos(u_tiltAngle);
+const float sinTilt = sin(u_tiltAngle);
+const mat4 rotationMatrix = mat4(
+  1.0, 0.0, 0.0, 0.0,
+  0.0, cosTilt, -sinTilt, 0.0,
+  0.0, sinTilt, cosTilt, 0.0,
+  0.0, 0.0, 0.0, 1.0
+);
+
+const float f = 1.0 / tan(u_fov / 2.0);
+
+vec4 getLandscapePosition(mat4 projectionMatrix) {
   int x = gl_VertexID % u_gridSize;
   int y = gl_VertexID / u_gridSize;
 
@@ -44,16 +54,18 @@ vec4 getLandscapePosition() {
   float zDisplacement = snoise(noiseSample * noiseFreqA) * noiseAmpA + snoise(noiseSample * noiseFreqB) * noiseAmpB;
   vec4 position = vec4(xNorm / u_aspectRatio, yNorm - yOffset, zOffset + zDisplacement, 1.0);
 
-  float cosTilt = cos(u_tiltAngle);
-  float sinTilt = sin(u_tiltAngle);
-  mat4 rotationMatrix = mat4(
-    1.0, 0.0, 0.0, 0.0,
-    0.0, cosTilt, -sinTilt, 0.0,
-    0.0, sinTilt, cosTilt, 0.0,
-    0.0, 0.0, 0.0, 1.0
-  );
+  return projectionMatrix * rotationMatrix * position;
+}
 
-  float f = 1.0 / tan(u_fov / 2.0);
+vec4 getBirdPosition(mat4 projectionMatrix) {
+  float t = float(u_t) * 0.005;
+  float x = snoise(vec3(t, 0, 0));
+  float y = snoise(vec3(0, t, 0));
+  float z = snoise(vec3(0, 0, t));
+  return projectionMatrix * rotationMatrix * (birdCenter + vec4(vec3(x, y, z) * vec3(0.3, 0.2, 0.05), 0.0));
+}
+
+void main() {
   mat4 projectionMatrix = mat4(
     f / u_aspectRatio, 0.0, 0.0, 0.0,
     0.0, f, 0.0, 0.0,
@@ -61,19 +73,15 @@ vec4 getLandscapePosition() {
     0.0, 0.0, (2.0 * u_far * u_near) / (u_near - u_far), 0.0
   );
 
-  return projectionMatrix * rotationMatrix * position;
-}
-
-void main() {
-  v_uv = a_position.xy;
-
-  gl_PointSize = u_aspectRatio;
+  gl_PointSize = u_aspectRatio * 4.0;
   
-  vec4 landscapePosition = getLandscapePosition();
+  vec4 landscapePosition = getLandscapePosition(projectionMatrix);
+  vec4 birdPosition = getBirdPosition(projectionMatrix);
+
   gl_Position = mat4(
-    a_position + vec4(0.0, 0.0, 0.9999, 0.0),
     landscapePosition,
     landscapePosition + vec4(0.0, 0.0001, 0.0, 0.0),
+    birdPosition,
     vec4(0)
   )[u_bufferIndex]; 
 }

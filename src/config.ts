@@ -2,18 +2,17 @@ import fragmentShader from 'shaders/main.frag';
 import vertexShader from 'shaders/main.vert';
 
 const {
-  ARRAY_BUFFER,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   FRAGMENT_SHADER,
   INT,
   LINES,
+  POINTS,
   TRIANGLES,
   VERTEX_SHADER,
 } = WebGL2RenderingContext;
 
 const GRID_SIZE = 100;
-const HORIZON = -0.5;
 
 export type ShaderConfig = { name: string; type: number; source: string };
 
@@ -108,25 +107,6 @@ const config: ProgramConfig = {
   ],
   buffers: [
     {
-      name: 'background',
-      type: ARRAY_BUFFER,
-      mode: TRIANGLES,
-      values: new Float32Array([
-        -1,
-        1,
-        1,
-        1,
-        -1,
-        HORIZON,
-        1,
-        HORIZON,
-        -1,
-        HORIZON,
-        1,
-        1,
-      ]),
-    },
-    {
       name: 'faces',
       type: ELEMENT_ARRAY_BUFFER,
       mode: TRIANGLES,
@@ -137,6 +117,12 @@ const config: ProgramConfig = {
       type: ELEMENT_ARRAY_BUFFER,
       mode: LINES,
       values: generateLineIndexArray(),
+    },
+    {
+      name: 'birds',
+      type: ELEMENT_ARRAY_BUFFER,
+      mode: POINTS,
+      values: new Uint16Array([0]),
     },
   ],
 };
