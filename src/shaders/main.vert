@@ -27,7 +27,7 @@ const float noiseAmpA = 0.05;
 const float noiseFreqB = 8.0;
 const float noiseAmpB = 0.03;
 
-void main() {
+vec4 getLandscapePosition() {
   int x = gl_VertexID % u_gridSize;
   int y = gl_VertexID / u_gridSize;
 
@@ -61,10 +61,15 @@ void main() {
     0.0, 0.0, (2.0 * u_far * u_near) / (u_near - u_far), 0.0
   );
 
-  vec4 landscapePosition = projectionMatrix * rotationMatrix * position;
+  return projectionMatrix * rotationMatrix * position;
+}
+
+void main() {
+  v_uv = a_position.xy;
 
   gl_PointSize = u_aspectRatio;
-  v_uv = a_position.xy;
+  
+  vec4 landscapePosition = getLandscapePosition();
   gl_Position = mat4(
     a_position,
     landscapePosition,
