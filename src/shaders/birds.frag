@@ -9,5 +9,5 @@ precision mediump int;
 out vec4 out_color;
 
 void main() {
-  out_color = englishViolet;
+  out_color = airForceBlue;
 }

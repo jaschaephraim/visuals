@@ -10,7 +10,10 @@ uniform float u_aspectRatio;
 uniform int u_t;
 uniform mat4 u_projectionMatrix;
 
-const vec4 birdCenter = vec4(0.0, -0.3, -0.3, 1.0);
+in vec4 a_position;
+
+const float scale = 0.01;
+const vec4 offset = vec4(0.0, -0.3, -0.3, 1.0);
 
 float sampleNoise(vec3 coord) {
   vec3 gradient = vec3(0.0);
@@ -22,7 +25,7 @@ vec4 getBirdPosition() {
   float x = sampleNoise(vec3(t, 0, 0));
   float y = sampleNoise(vec3(0, t, 0));
   float z = sampleNoise(vec3(0, 0, t));
-  return birdCenter + vec4(vec3(x, y, z) * vec3(0.4, 0.15, 0.14), 0.0);
+  return a_position * scale + offset + vec4(vec3(x, y, z) * vec3(0.4, 0.15, 0.14), 0.0);
 }
 
 void main() {

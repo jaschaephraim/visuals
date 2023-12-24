@@ -4,12 +4,12 @@ import { ProgramConfig } from '../types';
 import { getProjectionMatrix } from './perspective';
 
 const {
-  ELEMENT_ARRAY_BUFFER,
+  ARRAY_BUFFER,
   FLOAT,
   FLOAT_MAT4,
   FRAGMENT_SHADER,
   INT,
-  POINTS,
+  TRIANGLES,
   VERTEX_SHADER,
 } = WebGL2RenderingContext;
 
@@ -46,10 +46,18 @@ function getConfig(aspectRatio: number): ProgramConfig {
     ],
     buffers: [
       {
-        name: 'birds',
-        type: ELEMENT_ARRAY_BUFFER,
-        mode: POINTS,
-        values: new Uint16Array([0]),
+        name: 'bird',
+        type: ARRAY_BUFFER,
+        mode: TRIANGLES,
+        // prettier-ignore
+        values: new Float32Array([
+          0, 0, -0.2,
+          -1, 0.5, 0,
+          0, 0, 0.2,
+          0, 0, 0.2,
+          1, 0.5, 0,
+          0, 0, -0.2,
+        ]),
       },
     ],
   };

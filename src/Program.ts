@@ -133,7 +133,7 @@ class Program {
   private enableVertexAttribute(buffer: WebGLBuffer) {
     const position = this.webgl.getAttribLocation(this.program, 'a_position');
     this.webgl.bindBuffer(ARRAY_BUFFER, buffer);
-    this.webgl.vertexAttribPointer(position, 2, FLOAT, false, 0, 0);
+    this.webgl.vertexAttribPointer(position, 3, FLOAT, false, 0, 0);
     this.webgl.enableVertexAttribArray(position);
   }
 
@@ -152,7 +152,7 @@ class Program {
         this.webgl.drawElements(mode, values.length, UNSIGNED_SHORT, 0);
         break;
       case ARRAY_BUFFER:
-        this.webgl.drawArrays(mode, 0, values.length / 2);
+        this.webgl.drawArrays(mode, 0, values.length / 3);
         break;
       default:
         throw new Error(
