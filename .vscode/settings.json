@@ -11,5 +11,5 @@
   "[typescript]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
-  "glsllint.glslangValidatorArgs": "-l -I./node_modules/lygia"
+  "glsllint.glslangValidatorArgs": "-l"
 }

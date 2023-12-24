@@ -4,7 +4,7 @@
 precision mediump float;
 precision mediump int;
 
-#include "/generative/snoise.glsl"
+#include "psrdnoise3.glsl"
 
 uniform float u_aspectRatio;
 uniform int u_t;
@@ -13,11 +13,16 @@ uniform mat4 u_projectionMatrix;
 
 const vec4 birdCenter = vec4(0.0, 0.25, -0.2, 1.0);
 
+float sampleNoise(vec3 coord) {
+  vec3 gradient = vec3(0.0);
+  return psrdnoise(coord, vec3(0.0), 0.0, gradient);
+}
+
 vec4 getBirdPosition() {
   float t = float(u_t) * 0.005;
-  float x = snoise(vec3(t, 0, 0));
-  float y = snoise(vec3(0, t, 0));
-  float z = snoise(vec3(0, 0, t));
+  float x = sampleNoise(vec3(t, 0, 0));
+  float y = sampleNoise(vec3(0, t, 0));
+  float z = sampleNoise(vec3(0, 0, t));
   return u_projectionMatrix * u_rotationMatrix * (birdCenter + vec4(vec3(x, y, z) * vec3(0.3, 0.2, 0.05), 0.0));
 }
 

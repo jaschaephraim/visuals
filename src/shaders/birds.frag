@@ -1,12 +1,13 @@
 #version 300 es
+#extension GL_GOOGLE_include_directive : enable
 
 precision mediump float;
 precision mediump int;
 
+#include "palette.glsl"
+
 out vec4 out_color;
 
-const vec4 darkPurple = vec4(0.21568627450980393, 0.16470588235294117, 0.24705882352941178, 1.0);
-
 void main() {
-  out_color = darkPurple;
+  out_color = englishViolet;
 }

@@ -6,12 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 /** @type {import('vite').UserConfig} */
 export default defineConfig((config) => {
   const baseConfig = {
-    plugins: [
-      glsl({
-        root: '/node_modules/lygia',
-      }),
-      tsconfigPaths(),
-    ],
+    plugins: [glsl(), tsconfigPaths()],
   };
 
   if (config.command !== 'build') {

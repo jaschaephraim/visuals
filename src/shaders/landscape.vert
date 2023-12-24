@@ -4,7 +4,7 @@
 precision mediump float;
 precision mediump int;
 
-#include "/generative/snoise.glsl"
+#include "psrdnoise2.glsl"
 
 uniform float u_aspectRatio;
 uniform int u_gridSize;
@@ -21,6 +21,11 @@ const float noiseAmpA = 0.05;
 const float noiseFreqB = 8.0;
 const float noiseAmpB = 0.03;
 
+float sampleNoise(vec2 coord) {
+  vec2 gradient = vec2(0.0);
+  return psrdnoise(coord, vec2(0.0), 0.0, gradient);
+}
+
 vec4 getLandscapePosition() {
   int x = gl_VertexID % u_gridSize;
   int y = gl_VertexID / u_gridSize;
@@ -35,7 +40,7 @@ vec4 getLandscapePosition() {
   float yOffset = mod(scaledTime, cellSize);
   float zOffset = -0.3;
   vec2 noiseSample = vec2(xNorm / u_aspectRatio,  yNorm + cellOffset);
-  float zDisplacement = snoise(noiseSample * noiseFreqA) * noiseAmpA + snoise(noiseSample * noiseFreqB) * noiseAmpB;
+  float zDisplacement = sampleNoise(noiseSample * noiseFreqA) * noiseAmpA + sampleNoise(noiseSample * noiseFreqB) * noiseAmpB;
   vec4 position = vec4(xNorm / u_aspectRatio, yNorm - yOffset, zOffset + zDisplacement, 1.0);
 
   return u_projectionMatrix * u_rotationMatrix * position;
