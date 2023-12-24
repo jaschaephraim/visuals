@@ -1,4 +1,5 @@
-const TILT_RAD = 1.5;
+// const TILT_RAD = 1.5;
+const TILT_RAD = 0.0;
 const FOV = 2.5;
 const NEAR = 0.1;
 const FAR = 100;

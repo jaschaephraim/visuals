@@ -1,7 +1,7 @@
 import fragmentShader from 'shaders/birds.frag';
 import vertexShader from 'shaders/birds.vert';
 import { ProgramConfig } from '../types';
-import { getProjectionMatrix, getRotationMatrix } from './perspective';
+import { getProjectionMatrix } from './perspective';
 
 const {
   ELEMENT_ARRAY_BUFFER,
@@ -37,11 +37,6 @@ function getConfig(aspectRatio: number): ProgramConfig {
         name: 'u_t',
         type: INT,
         value: 0,
-      },
-      {
-        name: 'u_rotationMatrix',
-        type: FLOAT_MAT4,
-        value: getRotationMatrix(),
       },
       {
         name: 'u_projectionMatrix',
