@@ -61,8 +61,8 @@ vec4 getDisplacement(int t) {
 }
 
 mat4 getRotation(vec4 displacement) {
-  vec4 prevDisplacement = getDisplacement(u_t - 1);
-  vec4 diff = displacement - prevDisplacement;
+  vec4 nextDisplacement = getDisplacement(u_t + 1);
+  vec4 diff = nextDisplacement - displacement;
   vec3 rotations = vec3(-diff.y * 200.0, diff.x * 55.0, diff.x * 55.0);
   return rotationMatrix(rotations);
 }
