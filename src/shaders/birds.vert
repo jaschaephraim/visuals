@@ -34,9 +34,9 @@ mat4 rotationMatrix(vec3 rotations) {
   float yCos = cos(rotations.y);
   float ySin = sin(rotations.y);
   mat4 yRotation = mat4(
-    xCos, 0.0, xSin, 0.0,
+    yCos, 0.0, ySin, 0.0,
     0.0, 1.0, 0.0, 0.0,
-    -xSin, 0.0, xCos, 0.0,
+    -ySin, 0.0, yCos, 0.0,
     0.0, 0.0, 0.0, 1.0
   );
 
@@ -63,7 +63,7 @@ vec4 getDisplacement(int t) {
 mat4 getRotation(vec4 displacement) {
   vec4 prevDisplacement = getDisplacement(u_t - 1);
   vec4 diff = displacement - prevDisplacement;
-  vec3 rotations = diff.xyz * 50.0;
+  vec3 rotations = vec3(-diff.y * 200.0, diff.x * 55.0, diff.x * 55.0);
   return rotationMatrix(rotations);
 }
 
