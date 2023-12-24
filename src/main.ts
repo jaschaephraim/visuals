@@ -1,7 +1,7 @@
 import Stats from 'stats.js';
 
 import Scene from './Scene';
-import sceneConfig from './configs/scene-config';
+import getSceneConfig from './configs/scene-config';
 
 function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   const boundary = canvas.getBoundingClientRect();
@@ -13,7 +13,8 @@ function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
 }
 
 export function render(window: Window, canvas: HTMLCanvasElement) {
-  const aspectRatio = resizeCanvas(window, canvas);
+  let aspectRatio = resizeCanvas(window, canvas);
+  aspectRatio = 1;
 
   const stats = new Stats();
   canvas.parentElement?.appendChild(stats.dom);
@@ -23,6 +24,6 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
     throw new Error('unable to get webgl context');
   }
 
-  const scene = new Scene(window, webgl, sceneConfig, aspectRatio, stats);
+  const scene = new Scene(window, webgl, getSceneConfig(aspectRatio), stats);
   scene.run();
 }

@@ -14,21 +14,17 @@ class Scene {
 
   private programs: Program[] = [];
 
-  private aspectRatio: number;
-
   private stats: Stats | undefined;
 
   constructor(
     window: Window,
     webgl: WebGL2RenderingContext,
     config: SceneConfig,
-    aspectRatio: number,
     stats?: Stats
   ) {
     this.window = window;
     this.webgl = webgl;
     this.config = config;
-    this.aspectRatio = aspectRatio;
     this.stats = stats;
 
     this.linkPrograms();
@@ -47,7 +43,7 @@ class Scene {
 
   private linkPrograms() {
     this.config.programs.forEach((programConfig) => {
-      const program = new Program(this.webgl, programConfig, this.aspectRatio);
+      const program = new Program(this.webgl, programConfig);
       this.programs.push(program);
     });
   }

@@ -1,6 +1,20 @@
 export type ShaderConfig = { name: string; type: number; source: string };
 
-export type UniformConfig = { name: string; type: number; value: number };
+type BaseUniformConfig = {
+  name: string;
+};
+
+type NumberUniformConfig = BaseUniformConfig & {
+  type: WebGL2RenderingContext['FLOAT'] | WebGL2RenderingContext['INT'];
+  value: number;
+};
+
+type MatrixUniformConfig = BaseUniformConfig & {
+  type: WebGL2RenderingContext['FLOAT_MAT4'];
+  value: Float32Array;
+};
+
+export type UniformConfig = NumberUniformConfig | MatrixUniformConfig;
 
 export type BufferConfig = {
   name: string;

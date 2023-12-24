@@ -1,9 +1,14 @@
 import { SceneConfig } from '../types';
-import birdsProgramConfig from './birds-program-config';
-import landscapeProgramConfig from './landscape-program-config';
+import getBirdsProgramConfig from './birds-program-config';
+import getLandscapeProgramConfig from './landscape-program-config';
 
-const config: SceneConfig = {
-  programs: [landscapeProgramConfig, birdsProgramConfig],
-};
+function getConfig(aspectRatio: number): SceneConfig {
+  return {
+    programs: [
+      getLandscapeProgramConfig(aspectRatio),
+      getBirdsProgramConfig(aspectRatio),
+    ],
+  };
+}
 
-export default config;
+export default getConfig;

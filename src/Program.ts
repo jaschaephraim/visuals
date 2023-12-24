@@ -11,6 +11,7 @@ const {
   DEPTH_TEST,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
+  FLOAT_MAT4,
   INT,
   LINK_STATUS,
   STATIC_DRAW,
@@ -24,20 +25,13 @@ class Program {
 
   private program: WebGLProgram;
 
-  private aspectRatio: number;
-
   private uniforms: Record<string, WebGLUniformLocation> = {};
 
   private buffers: Record<string, WebGLBuffer> = {};
 
-  constructor(
-    webgl: WebGL2RenderingContext,
-    config: ProgramConfig,
-    aspectRatio: number
-  ) {
+  constructor(webgl: WebGL2RenderingContext, config: ProgramConfig) {
     this.webgl = webgl;
     this.config = config;
-    this.aspectRatio = aspectRatio;
 
     this.webgl.enable(DEPTH_TEST);
 
@@ -107,6 +101,9 @@ class Program {
         break;
       case INT:
         this.webgl.uniform1i(uniform, value);
+        break;
+      case FLOAT_MAT4:
+        this.webgl.uniformMatrix4fv(uniform, false, value);
         break;
       default:
         throw new Error(
