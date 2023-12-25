@@ -24,6 +24,12 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
     throw new Error('unable to get webgl context');
   }
 
-  const scene = new Scene(window, webgl, getSceneConfig(aspectRatio), stats);
+  const scene = new Scene({
+    window,
+    webgl,
+    config: getSceneConfig(aspectRatio),
+    dimensions: { width: canvas.width, height: canvas.height },
+    stats,
+  });
   scene.run();
 }

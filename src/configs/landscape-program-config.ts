@@ -57,6 +57,7 @@ function generateTriangleIndexArray() {
 
 function getConfig(aspectRatio: number): ProgramConfig {
   return {
+    useFramebuffer: false,
     shaders: [
       {
         name: 'vertex',

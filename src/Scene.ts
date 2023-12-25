@@ -5,6 +5,14 @@ import { SceneConfig } from './types';
 
 const { COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } = WebGL2RenderingContext;
 
+export type SceneArgs = {
+  window: Window;
+  webgl: WebGL2RenderingContext;
+  config: SceneConfig;
+  dimensions: { width: number; height: number };
+  stats?: Stats;
+};
+
 class Scene {
   private window: Window;
 
@@ -16,18 +24,19 @@ class Scene {
 
   private stats: Stats | undefined;
 
-  constructor(
-    window: Window,
-    webgl: WebGL2RenderingContext,
-    config: SceneConfig,
-    stats?: Stats
-  ) {
+  constructor({
+    window,
+    webgl,
+    config,
+    dimensions: { width, height },
+    stats,
+  }: SceneArgs) {
     this.window = window;
     this.webgl = webgl;
     this.config = config;
     this.stats = stats;
 
-    this.linkPrograms();
+    this.linkPrograms(width, height);
   }
 
   public run() {
@@ -41,9 +50,13 @@ class Scene {
     frame(0);
   }
 
-  private linkPrograms() {
+  private linkPrograms(width: number, height: number) {
     this.config.programs.forEach((programConfig) => {
-      const program = new Program(this.webgl, programConfig);
+      const program = new Program({
+        webgl: this.webgl,
+        config: programConfig,
+        dimensions: { width, height },
+      });
       this.programs.push(program);
     });
   }

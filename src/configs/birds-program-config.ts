@@ -15,6 +15,7 @@ const {
 
 function getConfig(aspectRatio: number): ProgramConfig {
   return {
+    useFramebuffer: true,
     shaders: [
       {
         name: 'vertex',
@@ -59,6 +60,20 @@ function getConfig(aspectRatio: number): ProgramConfig {
           0, 0, -0.2,
         ]),
       },
+      // {
+      //   name: 'screen',
+      //   type: ARRAY_BUFFER,
+      //   mode: TRIANGLES,
+      //   // prettier-ignore
+      //   values: new Float32Array([
+      //     -1, 1, 0,
+      //     1, 1, 0,
+      //     -1, -1, 0,
+      //     1, -1, 0,
+      //     -1, -1, 0,
+      //     1, 1, 0,
+      //   ]),
+      // },
     ],
   };
 }

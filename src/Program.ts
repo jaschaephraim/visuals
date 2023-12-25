@@ -7,16 +7,28 @@ import {
 
 const {
   ARRAY_BUFFER,
+  COLOR_ATTACHMENT0,
   COMPILE_STATUS,
   DEPTH_TEST,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   FLOAT_MAT4,
+  FRAMEBUFFER,
   INT,
   LINK_STATUS,
+  RGBA,
   STATIC_DRAW,
+  TEXTURE_3D,
+  TEXTURE0,
+  UNSIGNED_BYTE,
   UNSIGNED_SHORT,
 } = WebGL2RenderingContext;
+
+type ProgramArgs = {
+  webgl: WebGL2RenderingContext;
+  config: ProgramConfig;
+  dimensions: { width: number; height: number };
+};
 
 class Program {
   private webgl: WebGL2RenderingContext;
@@ -29,7 +41,11 @@ class Program {
 
   private buffers: Record<string, WebGLBuffer> = {};
 
-  constructor(webgl: WebGL2RenderingContext, config: ProgramConfig) {
+  private texture: WebGLTexture | null = null;
+
+  private framebuffer: WebGLFramebuffer | null = null;
+
+  constructor({ webgl, config, dimensions: { width, height } }: ProgramArgs) {
     this.webgl = webgl;
     this.config = config;
 
@@ -44,34 +60,52 @@ class Program {
     this.config.shaders.forEach((shaderConfig) =>
       this.attachShader(shaderConfig)
     );
+    this.config.buffers.forEach((bufferConfig) =>
+      this.createBuffer(bufferConfig)
+    );
+    if (this.config.useFramebuffer) {
+      this.createFramebuffer(width, height);
+    }
     this.linkProgram();
   }
 
   public use() {
     this.webgl.useProgram(this.program);
+
     this.config.uniforms.forEach((uniformConfig) =>
-      this.createUniform(uniformConfig)
-    );
-    this.config.buffers.forEach((bufferConfig) =>
-      this.createBuffer(bufferConfig)
+      this.setUniform(uniformConfig)
     );
     this.config.buffers.forEach((bufferConfig) => this.setBuffer(bufferConfig));
   }
 
   public draw(t: number) {
+    if (this.config.useFramebuffer) {
+      this.webgl.bindFramebuffer(FRAMEBUFFER, this.framebuffer);
+    }
+
     const timeUniform = this.getUniform('u_t');
     this.webgl.uniform1i(timeUniform, t);
     this.config.buffers.forEach((bufferConfig, i) =>
       this.drawBuffer(bufferConfig, i)
     );
+
+    if (this.config.useFramebuffer) {
+      this.webgl.bindFramebuffer(FRAMEBUFFER, null);
+      this.webgl.activeTexture(TEXTURE0);
+      this.webgl.bindTexture(TEXTURE_3D, this.texture);
+    }
   }
 
-  private linkProgram() {
-    this.webgl.linkProgram(this.program);
-    if (!this.webgl.getProgramParameter(this.program, LINK_STATUS)) {
-      const infoLog = this.webgl.getProgramInfoLog(this.program);
-      throw new Error(`unable to link program:\n${infoLog}`);
+  private getUniform(name: string) {
+    return this.uniforms[name] ?? null;
+  }
+
+  private getBuffer(name: string) {
+    const buffer = this.buffers[name];
+    if (!buffer) {
+      throw new Error(`buffer ${name} not found`);
     }
+    return buffer;
   }
 
   private attachShader({ name, type, source }: ShaderConfig) {
@@ -89,7 +123,53 @@ class Program {
     this.webgl.attachShader(this.program, shader);
   }
 
-  private createUniform({ name, type, value }: UniformConfig) {
+  private createBuffer({ name, type, values }: BufferConfig) {
+    const buffer = this.webgl.createBuffer();
+    if (!buffer) {
+      throw new Error(`unable to create buffer ${name}`);
+    }
+
+    this.webgl.bindBuffer(type, buffer);
+    this.webgl.bufferData(type, values, STATIC_DRAW);
+    this.buffers[name] = buffer;
+  }
+
+  private createFramebuffer(width: number, height: number) {
+    this.texture = this.webgl.createTexture();
+    this.webgl.bindTexture(TEXTURE_3D, this.texture);
+    this.webgl.texImage3D(
+      TEXTURE_3D,
+      0,
+      RGBA,
+      width,
+      height,
+      100,
+      0,
+      RGBA,
+      UNSIGNED_BYTE,
+      null
+    );
+
+    this.framebuffer = this.webgl.createFramebuffer();
+    this.webgl.bindFramebuffer(FRAMEBUFFER, this.framebuffer);
+    this.webgl.framebufferTextureLayer(
+      FRAMEBUFFER,
+      COLOR_ATTACHMENT0,
+      this.texture,
+      0,
+      0
+    );
+  }
+
+  private linkProgram() {
+    this.webgl.linkProgram(this.program);
+    if (!this.webgl.getProgramParameter(this.program, LINK_STATUS)) {
+      const infoLog = this.webgl.getProgramInfoLog(this.program);
+      throw new Error(`unable to link program:\n${infoLog}`);
+    }
+  }
+
+  private setUniform({ name, type, value }: UniformConfig) {
     const uniform = this.webgl.getUniformLocation(this.program, name);
     if (!uniform) {
       return;
@@ -113,26 +193,16 @@ class Program {
     this.uniforms[name] = uniform;
   }
 
-  private createBuffer({ name }: BufferConfig) {
-    const buffer = this.webgl.createBuffer();
-    if (!buffer) {
-      throw new Error(`unable to create buffer ${name}`);
-    }
-    this.buffers[name] = buffer;
-  }
-
-  private setBuffer({ name, type, values }: BufferConfig) {
+  private setBuffer({ name, type }: BufferConfig) {
     const buffer = this.getBuffer(name);
     this.webgl.bindBuffer(type, buffer);
-    this.webgl.bufferData(type, values, STATIC_DRAW);
     if (type === ARRAY_BUFFER) {
-      this.enableVertexAttribute(buffer);
+      this.enableVertexAttribute();
     }
   }
 
-  private enableVertexAttribute(buffer: WebGLBuffer) {
+  private enableVertexAttribute() {
     const position = this.webgl.getAttribLocation(this.program, 'a_position');
-    this.webgl.bindBuffer(ARRAY_BUFFER, buffer);
     this.webgl.vertexAttribPointer(position, 3, FLOAT, false, 0, 0);
     this.webgl.enableVertexAttribArray(position);
   }
@@ -159,18 +229,6 @@ class Program {
           `could not draw buffer ${name}, unexpected type ${type}`
         );
     }
-  }
-
-  private getUniform(name: string) {
-    return this.uniforms[name] ?? null;
-  }
-
-  private getBuffer(name: string) {
-    const buffer = this.buffers[name];
-    if (!buffer) {
-      throw new Error(`buffer ${name} not found`);
-    }
-    return buffer;
   }
 }
 
