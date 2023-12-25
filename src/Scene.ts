@@ -3,7 +3,14 @@ import Stats from 'stats.js';
 import Program from './Program';
 import { SceneConfig } from './types';
 
-const { COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } = WebGL2RenderingContext;
+const {
+  BLEND,
+  COLOR_BUFFER_BIT,
+  DEPTH_BUFFER_BIT,
+  DEPTH_TEST,
+  ONE_MINUS_SRC_ALPHA,
+  SRC_ALPHA,
+} = WebGL2RenderingContext;
 
 export type SceneArgs = {
   window: Window;
@@ -35,6 +42,10 @@ class Scene {
     this.webgl = webgl;
     this.config = config;
     this.stats = stats;
+
+    this.webgl.enable(DEPTH_TEST);
+    this.webgl.enable(BLEND);
+    this.webgl.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
 
     this.linkPrograms(width, height);
   }

@@ -9,7 +9,6 @@ const {
   ARRAY_BUFFER,
   COLOR_ATTACHMENT0,
   COMPILE_STATUS,
-  DEPTH_TEST,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   FLOAT_MAT4,
@@ -50,8 +49,6 @@ class Program {
   constructor({ webgl, config, dimensions: { width, height } }: ProgramArgs) {
     this.webgl = webgl;
     this.config = config;
-
-    this.webgl.enable(DEPTH_TEST);
 
     const program = this.webgl.createProgram();
     if (!program) {
