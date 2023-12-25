@@ -7,7 +7,7 @@ precision mediump int;
 #include "psrdnoise3.glsl"
 
 uniform float u_aspectRatio;
-uniform int u_t;
+uniform float u_t;
 uniform mat4 u_projectionMatrix;
 
 in vec4 a_position;
@@ -15,6 +15,8 @@ in vec4 a_position;
 const float scale = 0.01;
 const vec3 displacementScale = vec3(0.4, 0.15, 0.14);
 const vec4 offset = vec4(0.0, -0.3, -0.3, 1.0);
+const float speed = 0.0003;
+const float dt = 100.0;
 
 float sampleNoise(vec3 coord) {
   vec3 gradient = vec3(0.0);
@@ -52,8 +54,8 @@ mat4 rotationMatrix(vec3 rotations) {
   return xRotation * yRotation * zRotation;
 }
 
-vec4 getDisplacement(int t) {
-  float tScaled = float(t) * 0.005;
+vec4 getDisplacement(float t) {
+  float tScaled = t * speed;
   float x = sampleNoise(vec3(tScaled, 0, 0));
   float y = sampleNoise(vec3(0, tScaled, 0));
   float z = sampleNoise(vec3(0, 0, tScaled));
@@ -61,9 +63,9 @@ vec4 getDisplacement(int t) {
 }
 
 mat4 getRotation(vec4 displacement) {
-  vec4 nextDisplacement = getDisplacement(u_t + 1);
+  vec4 nextDisplacement = getDisplacement(u_t + dt);
   vec4 diff = nextDisplacement - displacement;
-  vec3 rotations = vec3(-diff.y * 250.0, diff.x * 50.0, diff.x * 55.0);
+  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x * 1.0) * dt * 0.2;
   return rotationMatrix(rotations);
 }
 

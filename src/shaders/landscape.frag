@@ -7,7 +7,6 @@ precision mediump int;
 #include "palette.glsl"
 
 uniform int u_bufferIndex;
-uniform int u_t;
 
 out vec4 out_color;
 

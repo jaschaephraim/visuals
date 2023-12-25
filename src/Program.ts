@@ -45,6 +45,8 @@ class Program {
 
   private framebuffer: WebGLFramebuffer | null = null;
 
+  private positionAttribute: number;
+
   constructor({ webgl, config, dimensions: { width, height } }: ProgramArgs) {
     this.webgl = webgl;
     this.config = config;
@@ -67,6 +69,14 @@ class Program {
       this.createFramebuffer(width, height);
     }
     this.linkProgram();
+
+    this.config.uniforms.forEach((uniformConfig) =>
+      this.createUniform(uniformConfig)
+    );
+    this.positionAttribute = this.webgl.getAttribLocation(
+      this.program,
+      'a_position'
+    );
   }
 
   public use() {
@@ -84,7 +94,7 @@ class Program {
     }
 
     const timeUniform = this.getUniform('u_t');
-    this.webgl.uniform1i(timeUniform, t);
+    this.webgl.uniform1f(timeUniform, t);
     this.config.buffers.forEach((bufferConfig, i) =>
       this.drawBuffer(bufferConfig, i)
     );
@@ -121,6 +131,13 @@ class Program {
       throw new Error(`unable to compile shader ${name}:\n${infoLog}`);
     }
     this.webgl.attachShader(this.program, shader);
+  }
+
+  private createUniform({ name }: UniformConfig) {
+    const uniform = this.webgl.getUniformLocation(this.program, name);
+    if (uniform) {
+      this.uniforms[name] = uniform;
+    }
   }
 
   private createBuffer({ name, type, values }: BufferConfig) {
@@ -170,7 +187,7 @@ class Program {
   }
 
   private setUniform({ name, type, value }: UniformConfig) {
-    const uniform = this.webgl.getUniformLocation(this.program, name);
+    const uniform = this.getUniform(name);
     if (!uniform) {
       return;
     }
@@ -190,7 +207,6 @@ class Program {
           `could not create uniform ${name}, unexpected type ${type}`
         );
     }
-    this.uniforms[name] = uniform;
   }
 
   private setBuffer({ name, type }: BufferConfig) {
@@ -202,9 +218,15 @@ class Program {
   }
 
   private enableVertexAttribute() {
-    const position = this.webgl.getAttribLocation(this.program, 'a_position');
-    this.webgl.vertexAttribPointer(position, 3, FLOAT, false, 0, 0);
-    this.webgl.enableVertexAttribArray(position);
+    this.webgl.vertexAttribPointer(
+      this.positionAttribute,
+      3,
+      FLOAT,
+      false,
+      0,
+      0
+    );
+    this.webgl.enableVertexAttribArray(this.positionAttribute);
   }
 
   private drawBuffer(

@@ -9,10 +9,10 @@ precision mediump int;
 uniform float u_aspectRatio;
 uniform int u_gridSize;
 uniform int u_bufferIndex;
-uniform int u_t;
+uniform float u_t;
 uniform mat4 u_projectionMatrix;
 
-const float speed = 0.005;
+const float speed = 0.0002;
 const float yOffset = -0.5;
 
 const float noiseFreqA = 3.0;
@@ -32,7 +32,7 @@ vec4 getLandscapePosition() {
   float xNorm = float(x) / float(u_gridSize - 1) * 2.0 - 1.0;
   float zNorm = float(z) / float(u_gridSize - 1) * 2.0 - 1.0;
 
-  float scaledTime = float(u_t) * speed;
+  float scaledTime = u_t * speed;
   float cellSize = 2.0 / float(u_gridSize);
   float cellOffset = floor(scaledTime / cellSize) * cellSize;
   

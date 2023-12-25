@@ -41,13 +41,13 @@ class Scene {
 
   public run() {
     const frame = (t: number) => {
-      this.window.requestAnimationFrame(() => frame(t + 1));
+      this.window.requestAnimationFrame(frame);
 
       this.stats?.begin();
       this.renderFrame(t);
       this.stats?.end();
     };
-    frame(0);
+    this.window.requestAnimationFrame(frame);
   }
 
   private linkPrograms(width: number, height: number) {

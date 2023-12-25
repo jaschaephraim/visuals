@@ -88,7 +88,7 @@ function getConfig(aspectRatio: number): ProgramConfig {
       },
       {
         name: 'u_t',
-        type: INT,
+        type: FLOAT,
         value: 0,
       },
       {

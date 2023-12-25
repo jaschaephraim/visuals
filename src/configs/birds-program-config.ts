@@ -8,14 +8,13 @@ const {
   FLOAT,
   FLOAT_MAT4,
   FRAGMENT_SHADER,
-  INT,
   TRIANGLES,
   VERTEX_SHADER,
 } = WebGL2RenderingContext;
 
 function getConfig(aspectRatio: number): ProgramConfig {
   return {
-    useFramebuffer: true,
+    useFramebuffer: false,
     shaders: [
       {
         name: 'vertex',
@@ -36,7 +35,7 @@ function getConfig(aspectRatio: number): ProgramConfig {
       },
       {
         name: 'u_t',
-        type: INT,
+        type: FLOAT,
         value: 0,
       },
       {
