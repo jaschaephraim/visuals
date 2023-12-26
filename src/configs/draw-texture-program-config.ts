@@ -35,11 +35,11 @@ function getConfig(_aspectRatio: number): ProgramConfig {
         // prettier-ignore
         values: new Float32Array([
           -1, 1, 0,
-          1, 1, 0,
           -1, -1, 0,
+          1, 1, 0,
           1, -1, 0,
-          -1, -1, 0,
           1, 1, 0,
+          -1, -1, 0,
         ]),
       },
     ],

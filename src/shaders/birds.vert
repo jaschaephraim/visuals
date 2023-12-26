@@ -16,7 +16,6 @@ const float scale = 0.01;
 const vec3 displacementScale = vec3(0.4, 0.15, 0.14);
 const vec4 offset = vec4(0.0, -0.3, -0.3, 1.0);
 const float speed = 0.0003;
-const float dt = 100.0;
 
 float sampleNoise(vec3 coord) {
   vec3 gradient = vec3(0.0);
@@ -63,9 +62,9 @@ vec4 getDisplacement(float t) {
 }
 
 mat4 getRotation(vec4 displacement) {
-  vec4 nextDisplacement = getDisplacement(u_t + dt);
+  vec4 nextDisplacement = getDisplacement(u_t + 1.0);
   vec4 diff = nextDisplacement - displacement;
-  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x * 1.0) * dt * 0.2;
+  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x ) * 1000.0;
   return rotationMatrix(rotations);
 }
 

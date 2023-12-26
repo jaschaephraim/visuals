@@ -8,16 +8,22 @@ import {
 const {
   ARRAY_BUFFER,
   COLOR_ATTACHMENT0,
+  COLOR_BUFFER_BIT,
   COMPILE_STATUS,
+  DEPTH_BUFFER_BIT,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   FLOAT_MAT4,
   FRAMEBUFFER,
+  FRAMEBUFFER_COMPLETE,
   INT,
+  LINEAR,
   LINK_STATUS,
   RGBA,
   STATIC_DRAW,
-  TEXTURE_3D,
+  TEXTURE_2D,
+  TEXTURE_MAG_FILTER,
+  TEXTURE_MIN_FILTER,
   TEXTURE0,
   UNSIGNED_BYTE,
   UNSIGNED_SHORT,
@@ -88,6 +94,7 @@ class Program {
   public draw(t: number) {
     if (this.config.useFramebuffer) {
       this.webgl.bindFramebuffer(FRAMEBUFFER, this.framebuffer);
+      this.webgl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
     }
 
     const timeUniform = this.getUniform('u_t');
@@ -99,7 +106,7 @@ class Program {
     if (this.config.useFramebuffer) {
       this.webgl.bindFramebuffer(FRAMEBUFFER, null);
       this.webgl.activeTexture(TEXTURE0);
-      this.webgl.bindTexture(TEXTURE_3D, this.texture);
+      this.webgl.bindTexture(TEXTURE_2D, this.texture);
     }
   }
 
@@ -150,14 +157,15 @@ class Program {
 
   private createFramebuffer(width: number, height: number) {
     this.texture = this.webgl.createTexture();
-    this.webgl.bindTexture(TEXTURE_3D, this.texture);
-    this.webgl.texImage3D(
-      TEXTURE_3D,
+    this.webgl.bindTexture(TEXTURE_2D, this.texture);
+    this.webgl.texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR);
+    this.webgl.texParameteri(TEXTURE_2D, TEXTURE_MAG_FILTER, LINEAR);
+    this.webgl.texImage2D(
+      TEXTURE_2D,
       0,
       RGBA,
       width,
       height,
-      100,
       0,
       RGBA,
       UNSIGNED_BYTE,
@@ -166,13 +174,19 @@ class Program {
 
     this.framebuffer = this.webgl.createFramebuffer();
     this.webgl.bindFramebuffer(FRAMEBUFFER, this.framebuffer);
-    this.webgl.framebufferTextureLayer(
+    this.webgl.framebufferTexture2D(
       FRAMEBUFFER,
       COLOR_ATTACHMENT0,
+      TEXTURE_2D,
       this.texture,
-      0,
       0
     );
+
+    if (
+      this.webgl.checkFramebufferStatus(FRAMEBUFFER) !== FRAMEBUFFER_COMPLETE
+    ) {
+      throw new Error('framebuffer is not complete');
+    }
   }
 
   private linkProgram() {
