@@ -92,6 +92,9 @@ class Program {
   public draw(t: number) {
     if (this.config.drawToFramebuffer) {
       this.webgl.bindFramebuffer(FRAMEBUFFER, this.framebuffer);
+      this.webgl.clear(
+        this.webgl.COLOR_BUFFER_BIT | this.webgl.DEPTH_BUFFER_BIT
+      );
     }
 
     const timeUniform = this.getUniform('u_t');

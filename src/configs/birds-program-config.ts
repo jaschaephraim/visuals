@@ -14,7 +14,7 @@ const {
 
 function getConfig(aspectRatio: number): ProgramConfig {
   return {
-    drawToFramebuffer: true,
+    drawToFramebuffer: false,
     shaders: [
       {
         name: 'vertex',
