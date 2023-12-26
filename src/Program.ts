@@ -8,9 +8,7 @@ import {
 const {
   ARRAY_BUFFER,
   COLOR_ATTACHMENT0,
-  COLOR_BUFFER_BIT,
   COMPILE_STATUS,
-  DEPTH_BUFFER_BIT,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   FLOAT_MAT4,
@@ -68,7 +66,7 @@ class Program {
     this.config.buffers.forEach((bufferConfig) =>
       this.createBuffer(bufferConfig)
     );
-    if (this.config.useFramebuffer) {
+    if (this.config.drawToFramebuffer) {
       this.createFramebuffer(width, height);
     }
     this.linkProgram();
@@ -92,9 +90,8 @@ class Program {
   }
 
   public draw(t: number) {
-    if (this.config.useFramebuffer) {
+    if (this.config.drawToFramebuffer) {
       this.webgl.bindFramebuffer(FRAMEBUFFER, this.framebuffer);
-      this.webgl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
     }
 
     const timeUniform = this.getUniform('u_t');
@@ -103,7 +100,7 @@ class Program {
       this.drawBuffer(bufferConfig, i)
     );
 
-    if (this.config.useFramebuffer) {
+    if (this.config.drawToFramebuffer) {
       this.webgl.bindFramebuffer(FRAMEBUFFER, null);
       this.webgl.activeTexture(TEXTURE0);
       this.webgl.bindTexture(TEXTURE_2D, this.texture);
@@ -187,6 +184,7 @@ class Program {
     ) {
       throw new Error('framebuffer is not complete');
     }
+    this.webgl.bindFramebuffer(FRAMEBUFFER, null);
   }
 
   private linkProgram() {

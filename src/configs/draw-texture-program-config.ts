@@ -7,7 +7,7 @@ const { ARRAY_BUFFER, FRAGMENT_SHADER, INT, TRIANGLES, VERTEX_SHADER } =
 
 function getConfig(_aspectRatio: number): ProgramConfig {
   return {
-    useFramebuffer: false,
+    drawToFramebuffer: false,
     shaders: [
       {
         name: 'vertex',

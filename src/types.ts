@@ -24,7 +24,7 @@ export type BufferConfig = {
 };
 
 export type ProgramConfig = {
-  useFramebuffer: boolean;
+  drawToFramebuffer: boolean;
   shaders: ShaderConfig[];
   uniforms: UniformConfig[];
   buffers: BufferConfig[];
