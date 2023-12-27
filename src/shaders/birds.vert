@@ -4,7 +4,7 @@
 precision mediump float;
 precision mediump int;
 
-#include "psrdnoise3.glsl"
+#include "bird-displacement.glsl"
 
 uniform float u_aspectRatio;
 uniform float u_t;
@@ -13,14 +13,6 @@ uniform mat4 u_projectionMatrix;
 in vec4 a_position;
 
 const float scale = 0.01;
-const vec3 displacementScale = vec3(0.4, 0.15, 0.14);
-const vec4 offset = vec4(0.0, -0.3, -0.3, 1.0);
-const float speed = 0.0003;
-
-float sampleNoise(vec3 coord) {
-  vec3 gradient = vec3(0.0);
-  return psrdnoise(coord, vec3(0.0), 0.0, gradient);
-}
 
 mat4 rotationMatrix(vec3 rotations) {
   float xCos = cos(rotations.x);
@@ -51,14 +43,6 @@ mat4 rotationMatrix(vec3 rotations) {
   );
 
   return xRotation * yRotation * zRotation;
-}
-
-vec4 getDisplacement(float t) {
-  float tScaled = t * speed;
-  float x = sampleNoise(vec3(tScaled, 0, 0));
-  float y = sampleNoise(vec3(0, tScaled, 0));
-  float z = sampleNoise(vec3(0, 0, tScaled));
-  return vec4(vec3(x, y, z) * displacementScale, 0.0) + offset;
 }
 
 mat4 getRotation(vec4 displacement) {

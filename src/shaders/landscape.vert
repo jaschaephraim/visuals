@@ -12,6 +12,8 @@ uniform int u_bufferIndex;
 uniform float u_t;
 uniform mat4 u_projectionMatrix;
 
+out vec2 v_uv;
+
 const float speed = 0.0002;
 const float yOffset = -0.5;
 
@@ -47,10 +49,13 @@ vec4 getLandscapePosition() {
 
 void main() {  
   vec4 landscapePosition = getLandscapePosition();
-  gl_Position = mat4(
+  vec4 position = mat4(
     landscapePosition,
     landscapePosition + vec4(0.0, 0.0001, 0.0, 0.0),
     vec4(0),
     vec4(0)
-  )[u_bufferIndex]; 
+  )[u_bufferIndex];
+
+  gl_Position = position;
+  v_uv = position.xz;
 }
