@@ -24,10 +24,10 @@ function generateLineIndexArray() {
       elements.push(i);
       elements.push(i + 1);
     }
-    if (Math.floor(i / GRID_SIZE) < lastGridIndex) {
-      elements.push(i);
-      elements.push(i + GRID_SIZE);
-    }
+    // if (Math.floor(i / GRID_SIZE) < lastGridIndex) {
+    //   elements.push(i);
+    //   elements.push(i + GRID_SIZE);
+    // }
   }
   return new Uint16Array(elements);
 }
