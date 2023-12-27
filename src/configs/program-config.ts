@@ -1,12 +1,11 @@
-import fragmentShader from 'shaders/landscape.frag';
-import vertexShader from 'shaders/landscape.vert';
+import fragmentShader from 'shaders/main.frag';
+import vertexShader from 'shaders/main.vert';
 import { ProgramConfig } from '../types';
-import { getProjectionMatrix } from './perspective';
 
 const {
+  ARRAY_BUFFER,
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
-  FLOAT_MAT4,
   FRAGMENT_SHADER,
   INT,
   LINES,
@@ -74,7 +73,7 @@ function getConfig(aspectRatio: number): ProgramConfig {
       {
         name: 'u_aspectRatio',
         type: FLOAT,
-        value: 1,
+        value: aspectRatio,
       },
       {
         name: 'u_gridSize',
@@ -91,11 +90,6 @@ function getConfig(aspectRatio: number): ProgramConfig {
         type: FLOAT,
         value: 0,
       },
-      {
-        name: 'u_projectionMatrix',
-        type: FLOAT_MAT4,
-        value: getProjectionMatrix(aspectRatio),
-      },
     ],
     buffers: [
       {
@@ -109,6 +103,20 @@ function getConfig(aspectRatio: number): ProgramConfig {
         type: ELEMENT_ARRAY_BUFFER,
         mode: LINES,
         values: generateLineIndexArray(),
+      },
+      {
+        name: 'bird',
+        type: ARRAY_BUFFER,
+        mode: TRIANGLES,
+        // prettier-ignore
+        values: new Float32Array([
+          0, 0, -0.2,
+          -1, 0.5, 0,
+          0, 0, 0.2,
+          0, 0, 0.2,
+          1, 0.5, 0,
+          0, 0, -0.2,
+        ]),
       },
     ],
   };
