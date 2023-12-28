@@ -39,7 +39,7 @@ mat4 nextBirdDisplacements;
 const float birdScale = 0.01;
 const float birdSpeed = 0.0003;
 const vec3 birdDisplacementScale = vec3(0.4, 0.15, 0.14);
-const vec4 birdOffset = vec4(0.0, -0.3, -0.3, 1.0);
+const vec4 birdOffset = vec4(0.0, landscapeYOffset + 0.2, -0.3, 1.0);
 const mat3 birdNoiseOffsets = mat3(
   -1, 0, 1,
   0, 1, -1,
