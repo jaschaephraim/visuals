@@ -35,6 +35,7 @@ const float noiseFreqB = 8.0;
 const float noiseAmpB = 0.03;
 
 // bird
+mat4 nextBirdDisplacements;
 const float birdScale = 0.01;
 const float birdSpeed = 0.0003;
 const vec3 birdDisplacementScale = vec3(0.4, 0.15, 0.14);
@@ -56,11 +57,14 @@ float sampleNoise3(vec3 coord) {
 }
 
 vec4 getLandscapePosition() {
-  int x = gl_VertexID % u_gridSize;
-  int z = gl_VertexID / u_gridSize;
+  ivec2 coord = ivec2(
+    gl_VertexID % u_gridSize,
+    gl_VertexID / u_gridSize
+  );
 
-  float xNorm = float(x) / float(u_gridSize - 1) * 2.0 - 1.0;
-  float zNorm = float(z) / float(u_gridSize - 1) * 2.0 - 1.0;
+  vec2 norm = vec2(coord) / float(u_gridSize - 1) * 2.0 - 1.0;
+  float xNorm = norm.x;
+  float zNorm = norm.y;
 
   float scaledTime = u_t * landscapeSpeed;
   float cellSize = 2.0 / float(u_gridSize);
@@ -77,21 +81,20 @@ vec4 getLandscapePosition() {
 
 mat4 getBirdDisplacements(float t) {
   float tScaled = t * birdSpeed;
-  vec2 x = vec2(
+  vec3 displacement1 = vec3(
     sampleNoise3(vec3(tScaled, 0, 0) + birdNoiseOffsets[0]),
-    sampleNoise3(vec3(tScaled, 0, 0) + birdNoiseOffsets[1])
-  );
-  vec2 y = vec2(
     sampleNoise3(vec3(0, tScaled, 0) + birdNoiseOffsets[0]),
-    sampleNoise3(vec3(0, tScaled, 0) + birdNoiseOffsets[1])
+    sampleNoise3(vec3(0, 0, tScaled) + birdNoiseOffsets[0])
   );
-  vec2 z = vec2(
-    sampleNoise3(vec3(0, 0, tScaled) + birdNoiseOffsets[0]),
+  vec3 displacement2 = vec3(
+    sampleNoise3(vec3(tScaled, 0, 0) + birdNoiseOffsets[1]),
+    sampleNoise3(vec3(0, tScaled, 0) + birdNoiseOffsets[1]),
     sampleNoise3(vec3(0, 0, tScaled) + birdNoiseOffsets[1])
   );
+
   return mat4(
-    vec4(vec3(x[0], y[0], z[0]) * birdDisplacementScale, 0.0) + birdOffset,
-    vec4(vec3(x[1], y[1], z[1]) * birdDisplacementScale, 0.0) + birdOffset,
+    vec4(displacement1 * birdDisplacementScale, 0.0) + birdOffset,
+    vec4(displacement2 * birdDisplacementScale, 0.0) + birdOffset,
     vec4(0),
     vec4(0)
   );
@@ -130,15 +133,16 @@ mat4 getBirdRotationMatrix(vec3 rotations) {
 
 mat4 getBirdRotation(int birdIndex) {
   vec4 displacement = v_birdDisplacements[birdIndex];
-  vec4 nextDisplacement = getBirdDisplacements(u_t + 1.0)[birdIndex];
+  vec4 nextDisplacement = nextBirdDisplacements[birdIndex];
   vec4 diff = nextDisplacement - displacement;
+
   vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x ) * 1000.0;
   return getBirdRotationMatrix(rotations);
 }
 
 vec4 getVertexPosition(int birdIndex) {
   mat4 rotation = getBirdRotation(birdIndex);
-  return rotation * a_position * birdScale;
+  return rotation * a_position;
 }
 
 mat4 getBirdVertexPositions() {
@@ -147,7 +151,7 @@ mat4 getBirdVertexPositions() {
     getVertexPosition(1),
     vec4(0),
     vec4(0)
-  );
+  ) * birdScale;
   mat4 positions = vertices + v_birdDisplacements;
   return v_projectionMatrix * positions;
 }
@@ -161,6 +165,7 @@ void main() {
   );
 
   v_birdDisplacements = getBirdDisplacements(u_t);
+  nextBirdDisplacements = getBirdDisplacements(u_t + 1.0);
 
   vec4 landscapePosition = getLandscapePosition();
   mat4 birdVertexPositions = getBirdVertexPositions();

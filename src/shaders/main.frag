@@ -24,9 +24,9 @@ const float shadowOffset = 0.035;
 void main() {
   mat4 displacements = v_projectionMatrix * v_birdDisplacements;
   vec2 heights = vec2(
-    displacements[0].y + 1.0 / 2.0,
-    displacements[1].y + 1.0 / 2.0
-  );
+    displacements[0].y,
+    displacements[1].y
+  ) + 1.0 / 2.0;
   vec2 birdDistances = vec2(
     distance(v_uv, displacements[0].xz),
     distance(v_uv, displacements[1].xz)
