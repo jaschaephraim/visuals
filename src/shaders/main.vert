@@ -21,11 +21,11 @@ out mat4 v_birdDisplacements;
 const float fov = 2.5;
 const float near = 0.1;
 const float far = 100.0;
+const float verticalShift = -0.15;
 const float f = 1.0 / tan(fov / 2.0);
 
 // landscape
 const float landscapeSpeed = 0.0002;
-const float landscapeYOffset = -0.5;
 const float landscapeLineOffset = 0.0001;
 
 // landscape noise
@@ -39,7 +39,7 @@ mat4 nextBirdDisplacements;
 const float birdScale = 0.01;
 const float birdSpeed = 0.0003;
 const vec3 birdDisplacementScale = vec3(0.4, 0.15, 0.14);
-const vec4 birdOffset = vec4(0.0, landscapeYOffset + 0.2, -0.3, 1.0);
+const vec4 birdOffset = vec4(0.0, 0.2, -0.3, 1.0);
 const mat3 birdNoiseOffsets = mat3(
   -1, 0, 1,
   0, 1, -1,
@@ -74,7 +74,7 @@ vec4 getLandscapePosition() {
   vec2 noiseSample = vec2(xNorm / u_aspectRatio,  zNorm - cellOffset);
   float yDisplacement = sampleNoise2(noiseSample * noiseFreqA) * noiseAmpA
     + sampleNoise2(noiseSample * noiseFreqB) * noiseAmpB;
-  vec4 position = vec4(xNorm / u_aspectRatio, landscapeYOffset + yDisplacement, zNorm + zOffset, 1.0);
+  vec4 position = vec4(xNorm / u_aspectRatio, yDisplacement, zNorm + zOffset, 1.0);
 
   return v_projectionMatrix * position;
 }
@@ -161,7 +161,7 @@ void main() {
     f / u_aspectRatio, 0.0, 0.0, 0.0,
     0.0, f, 0.0, 0.0,
     0.0, 0.0, (far + near) / (near - far), -1.0,
-    0.0, 0.0, (2.0 * far * near) / (near - far), 0.0
+    0.0, verticalShift, (2.0 * far * near) / (near - far), 0.0
   );
 
   v_birdDisplacements = getBirdDisplacements(u_t);
