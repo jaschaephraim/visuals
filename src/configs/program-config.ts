@@ -96,18 +96,21 @@ function getConfig(aspectRatio: number): ProgramConfig {
         name: 'faces',
         type: ELEMENT_ARRAY_BUFFER,
         mode: TRIANGLES,
+        drawCount: 1,
         values: generateTriangleIndexArray(),
       },
       {
         name: 'edges',
         type: ELEMENT_ARRAY_BUFFER,
         mode: LINES,
+        drawCount: 1,
         values: generateLineIndexArray(),
       },
       {
         name: 'bird',
         type: ARRAY_BUFFER,
         mode: TRIANGLES,
+        drawCount: 2,
         // prettier-ignore
         values: new Float32Array([
           0, 0, -0.2,

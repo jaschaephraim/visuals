@@ -99,9 +99,11 @@ class Program {
 
     const timeUniform = this.getUniform('u_t');
     this.webgl.uniform1f(timeUniform, t);
-    this.config.buffers.forEach((bufferConfig, i) =>
-      this.drawBuffer(bufferConfig, i)
-    );
+
+    let bufferIndex = 0;
+    this.config.buffers.forEach((bufferConfig) => {
+      bufferIndex = this.drawBuffer(bufferConfig, bufferIndex);
+    });
 
     if (this.config.drawToFramebuffer) {
       this.webgl.bindFramebuffer(FRAMEBUFFER, null);
@@ -242,27 +244,30 @@ class Program {
   }
 
   private drawBuffer(
-    { name, type, mode, values }: BufferConfig,
-    index: number
+    { name, type, mode, drawCount, values }: BufferConfig,
+    bufferIndex: number
   ) {
     const buffer = this.getBuffer(name);
+    this.webgl.bindBuffer(type, buffer);
     const bufferIndexUniform = this.getUniform('u_bufferIndex');
 
-    this.webgl.uniform1i(bufferIndexUniform, index);
-    this.webgl.bindBuffer(type, buffer);
-
-    switch (type) {
-      case ELEMENT_ARRAY_BUFFER:
-        this.webgl.drawElements(mode, values.length, UNSIGNED_SHORT, 0);
-        break;
-      case ARRAY_BUFFER:
-        this.webgl.drawArrays(mode, 0, values.length / 3);
-        break;
-      default:
-        throw new Error(
-          `could not draw buffer ${name}, unexpected type ${type}`
-        );
+    for (let i = 0; i < drawCount; i++) {
+      this.webgl.uniform1i(bufferIndexUniform, bufferIndex);
+      switch (type) {
+        case ELEMENT_ARRAY_BUFFER:
+          this.webgl.drawElements(mode, values.length, UNSIGNED_SHORT, 0);
+          break;
+        case ARRAY_BUFFER:
+          this.webgl.drawArrays(mode, 0, values.length / 3);
+          break;
+        default:
+          throw new Error(
+            `could not draw buffer ${name}, unexpected type ${type}`
+          );
+      }
+      bufferIndex++;
     }
+    return bufferIndex;
   }
 }
 

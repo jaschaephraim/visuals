@@ -20,6 +20,7 @@ export type BufferConfig = {
   name: string;
   type: number;
   mode: number;
+  drawCount: number;
   values: Float32Array | Uint16Array;
 };
 
