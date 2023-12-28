@@ -1,9 +1,9 @@
 import { SceneConfig } from '../types';
-import getProgramConfig from './program-config';
+import getProgramConfig, { Config } from './program-config';
 
-function getConfig(aspectRatio: number): SceneConfig {
+function getConfig(config: Config): SceneConfig {
   return {
-    programs: [getProgramConfig(aspectRatio)],
+    programs: [getProgramConfig(config)],
   };
 }
 

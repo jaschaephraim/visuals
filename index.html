@@ -12,7 +12,14 @@
       import { render } from './src/main.ts';
 
       const canvas = document.getElementById('visuals');
-      render(window, canvas);
+      render(window, canvas, {
+        fov: 2.3,
+        cameraHeight: 0.12,
+        edgeColor: '#FFFFFF',
+        faceColor: '#FBE5C3',
+        birdColor: '#658DA5',
+        shadowColor: '#473931',
+      });
     </script>
   </body>
 </html>

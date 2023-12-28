@@ -62,7 +62,25 @@ function generateTriangleIndexArray() {
   return new Uint16Array(elements);
 }
 
-function getConfig(aspectRatio: number): ProgramConfig {
+export type Config = {
+  aspectRatio: number;
+  fov: number;
+  cameraHeight: number;
+  edgeColor: string;
+  faceColor: string;
+  birdColor: string;
+  shadowColor: string;
+};
+
+function getConfig({
+  aspectRatio,
+  fov,
+  cameraHeight,
+  edgeColor,
+  faceColor,
+  birdColor,
+  shadowColor,
+}: Config): ProgramConfig {
   return {
     drawToFramebuffer: false,
     shaders: [
@@ -101,32 +119,32 @@ function getConfig(aspectRatio: number): ProgramConfig {
       {
         name: 'u_fov',
         type: FLOAT,
-        value: 2.3,
+        value: fov,
       },
       {
         name: 'u_cameraHeight',
         type: FLOAT,
-        value: 0.12,
+        value: cameraHeight,
       },
       {
         name: 'u_edgeColor',
         type: FLOAT_VEC4,
-        value: hexToRgb('#FFFFFF'),
+        value: hexToRgb(edgeColor),
       },
       {
         name: 'u_faceColor',
         type: FLOAT_VEC4,
-        value: hexToRgb('#FBE5C3'),
+        value: hexToRgb(faceColor),
       },
       {
         name: 'u_birdColor',
         type: FLOAT_VEC4,
-        value: hexToRgb('#658DA5'),
+        value: hexToRgb(birdColor),
       },
       {
         name: 'u_shadowColor',
         type: FLOAT_VEC4,
-        value: hexToRgb('#473931'),
+        value: hexToRgb(shadowColor),
       },
     ],
     buffers: [

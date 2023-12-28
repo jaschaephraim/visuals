@@ -2,6 +2,7 @@ import Stats from 'stats.js';
 
 import Scene from './Scene';
 import getSceneConfig from './configs/scene-config';
+import { Config } from './configs/program-config';
 
 function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   const boundary = canvas.getBoundingClientRect();
@@ -12,7 +13,11 @@ function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   return aspectRatio;
 }
 
-export function render(window: Window, canvas: HTMLCanvasElement) {
+export function render(
+  window: Window,
+  canvas: HTMLCanvasElement,
+  config: Omit<Config, 'aspectRatio'>
+) {
   const aspectRatio = resizeCanvas(window, canvas);
 
   const stats = new Stats();
@@ -26,7 +31,10 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
   const scene = new Scene({
     window,
     webgl,
-    config: getSceneConfig(aspectRatio),
+    config: getSceneConfig({
+      ...config,
+      aspectRatio,
+    }),
     dimensions: { width: canvas.width, height: canvas.height },
     stats,
   });
