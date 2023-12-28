@@ -17,7 +17,7 @@ in mat4 v_birdDisplacements;
 out vec4 out_color; 
 
 const float shadowRadius = 0.1;
-const float shadowOffset = 0.035;
+const float shadowOffset = 0.04;
 
 void main() {
   mat4 displacements = v_projectionMatrix * v_birdDisplacements;
@@ -33,8 +33,8 @@ void main() {
   vec4 shadowColor = vec4(u_shadowColor.rgb, 0.35);
   vec2 shadowSizes = heights * shadowRadius - shadowOffset;
   vec2 shadowValues = vec2(
-    smoothstep(0.0, shadowSizes[0], birdDistances[0]),
-    smoothstep(0.0, shadowSizes[1], birdDistances[1])
+    smoothstep(0.0, clamp(shadowSizes[0], 0.0, 1.0), birdDistances[0]),
+    smoothstep(0.0, clamp(shadowSizes[1], 0.0, 1.0), birdDistances[1])
   );
   vec4 finalColor = mix(shadowColor, u_faceColor, min(shadowValues[0], shadowValues[1]));
 

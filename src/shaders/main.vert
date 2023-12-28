@@ -21,8 +21,9 @@ out mat4 v_birdDisplacements;
 const float fov = 2.5;
 const float near = 0.1;
 const float far = 100.0;
-const float verticalShift = -0.15;
+const float cameraHeight = 0.15;
 const float f = 1.0 / tan(fov / 2.0);
+// const float verticalOffset = -0.1;
 
 // landscape
 const float landscapeSpeed = 0.0002;
@@ -161,7 +162,7 @@ void main() {
     f / u_aspectRatio, 0.0, 0.0, 0.0,
     0.0, f, 0.0, 0.0,
     0.0, 0.0, (far + near) / (near - far), -1.0,
-    0.0, verticalShift, (2.0 * far * near) / (near - far), 0.0
+    0.0, -cameraHeight, (2.0 * far * near) / (near - far), 0.0
   );
 
   v_birdDisplacements = getBirdDisplacements(u_t);

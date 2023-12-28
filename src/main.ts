@@ -13,8 +13,7 @@ function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
 }
 
 export function render(window: Window, canvas: HTMLCanvasElement) {
-  let aspectRatio = resizeCanvas(window, canvas);
-  aspectRatio = 1;
+  const aspectRatio = resizeCanvas(window, canvas);
 
   const stats = new Stats();
   canvas.parentElement?.appendChild(stats.dom);
