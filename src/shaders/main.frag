@@ -17,7 +17,7 @@ in mat4 v_birdDisplacements;
 out vec4 out_color; 
 
 const float shadowRadius = 0.1;
-const float shadowOffset = 0.04;
+const float shadowOffset = 0.055;
 
 void main() {
   mat4 displacements = v_projectionMatrix * v_birdDisplacements;
