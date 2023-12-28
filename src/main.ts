@@ -24,10 +24,6 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
     throw new Error('unable to get webgl context');
   }
 
-  // if (spector) {
-  //   spector.startCapture(webgl);
-  // }
-
   const scene = new Scene({
     window,
     webgl,
@@ -36,8 +32,4 @@ export function render(window: Window, canvas: HTMLCanvasElement) {
     stats,
   });
   scene.run();
-
-  // if (spector) {
-  //   SpeechRecognitionResult.stopCapture();
-  // }
 }

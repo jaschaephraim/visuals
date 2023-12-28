@@ -12,6 +12,7 @@ const {
   ELEMENT_ARRAY_BUFFER,
   FLOAT,
   FLOAT_MAT4,
+  FLOAT_VEC4,
   FRAMEBUFFER,
   FRAMEBUFFER_COMPLETE,
   INT,
@@ -212,6 +213,9 @@ class Program {
         break;
       case INT:
         this.webgl.uniform1i(uniform, value);
+        break;
+      case FLOAT_VEC4:
+        this.webgl.uniform4f(uniform, value[0], value[1], value[2], value[3]);
         break;
       case FLOAT_MAT4:
         this.webgl.uniformMatrix4fv(uniform, false, value);

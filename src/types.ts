@@ -9,12 +9,21 @@ type NumberUniformConfig = BaseUniformConfig & {
   value: number;
 };
 
+export type Vector = [number, number, number, number];
+type VectorUniformConfig = BaseUniformConfig & {
+  type: WebGL2RenderingContext['FLOAT_VEC4'];
+  value: Vector;
+};
+
 type MatrixUniformConfig = BaseUniformConfig & {
   type: WebGL2RenderingContext['FLOAT_MAT4'];
   value: Float32Array;
 };
 
-export type UniformConfig = NumberUniformConfig | MatrixUniformConfig;
+export type UniformConfig =
+  | NumberUniformConfig
+  | VectorUniformConfig
+  | MatrixUniformConfig;
 
 export type BufferConfig = {
   name: string;

@@ -4,19 +4,17 @@
 precision mediump float;
 precision mediump int;
 
-#include "palette.frag.glsl"
-
 uniform int u_bufferIndex;
 uniform float u_t;
+uniform vec4 u_edgeColor;
+uniform vec4 u_faceColor;
+uniform vec4 u_birdColor;
+uniform vec4 u_shadowColor;
 
 in vec2 v_uv;
 in mat4 v_projectionMatrix;
 in mat4 v_birdDisplacements;
-out vec4 out_color;
-
-const vec4 faceColor = champagne;
-const vec4 edgeColor = seaSalt;
-const vec4 shadowColor = vec4(vanDyke.rgb, 0.35);
+out vec4 out_color; 
 
 const float shadowRadius = 0.1;
 const float shadowOffset = 0.035;
@@ -32,17 +30,18 @@ void main() {
     distance(v_uv, displacements[1].xz)
   );
   
+  vec4 shadowColor = vec4(u_shadowColor.rgb, 0.35);
   vec2 shadowSizes = heights * shadowRadius - shadowOffset;
   vec2 shadowValues = vec2(
     smoothstep(0.0, shadowSizes[0], birdDistances[0]),
     smoothstep(0.0, shadowSizes[1], birdDistances[1])
   );
-  vec4 finalColor = mix(shadowColor, faceColor, min(shadowValues[0], shadowValues[1]));
+  vec4 finalColor = mix(shadowColor, u_faceColor, min(shadowValues[0], shadowValues[1]));
 
   out_color = mat4(
     finalColor,
-    edgeColor,
-    airForceBlue,
-    airForceBlue
+    u_edgeColor,
+    u_birdColor,
+    u_birdColor
   )[u_bufferIndex];
 }
