@@ -11,6 +11,8 @@ uniform float u_aspectRatio;
 uniform int u_gridSize;
 uniform int u_bufferIndex;
 uniform float u_t;
+uniform float u_fov;
+uniform float u_cameraHeight;
 
 in vec4 a_position;
 out vec2 v_uv;
@@ -18,12 +20,8 @@ out mat4 v_projectionMatrix;
 out mat4 v_birdDisplacements;
 
 // projection
-const float fov = 2.3;
 const float near = 0.1;
 const float far = 100.0;
-const float cameraHeight = 0.15;
-const float f = 1.0 / tan(fov / 2.0);
-// const float verticalOffset = -0.1;
 
 // landscape
 const float landscapeSpeed = 0.0002;
@@ -158,6 +156,7 @@ mat4 getBirdVertexPositions() {
 }
 
 void main() {
+  float f = 1.0 / tan(u_fov / 2.0);
   v_projectionMatrix = mat4(
     f / u_aspectRatio, 0.0, 0.0, 0.0,
     0.0, f, 0.0, 0.0,
@@ -177,6 +176,6 @@ void main() {
     birdVertexPositions[1]
   )[u_bufferIndex];
 
-  gl_Position = position - vec4(0.0, cameraHeight, 0.0, 0.0);
+  gl_Position = position - vec4(0.0, u_cameraHeight, 0.0, 0.0);
   v_uv = position.xz;
 }

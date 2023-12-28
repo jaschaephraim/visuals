@@ -99,6 +99,16 @@ function getConfig(aspectRatio: number): ProgramConfig {
         value: 0,
       },
       {
+        name: 'u_fov',
+        type: FLOAT,
+        value: 2.3,
+      },
+      {
+        name: 'u_cameraHeight',
+        type: FLOAT,
+        value: 0.12,
+      },
+      {
         name: 'u_edgeColor',
         type: FLOAT_VEC4,
         value: hexToRgb('#FFFFFF'),
