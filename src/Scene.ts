@@ -51,6 +51,10 @@ class Scene {
   }
 
   public run() {
+    if (this.programs.length === 1) {
+      this.programs[0]!.use();
+    }
+
     const frame = (t: number) => {
       this.window.requestAnimationFrame(frame);
 
@@ -80,7 +84,9 @@ class Scene {
   private renderFrame(t: number) {
     this.clear();
     this.programs.forEach((program) => {
-      program.use();
+      if (this.programs.length > 1) {
+        program.use();
+      }
       program.draw(t);
     });
   }
