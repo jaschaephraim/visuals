@@ -17,7 +17,7 @@ export type SceneArgs = {
   webgl: WebGL2RenderingContext;
   config: SceneConfig;
   dimensions: { width: number; height: number };
-  stats?: Stats;
+  stats: Stats | undefined;
 };
 
 class Scene {

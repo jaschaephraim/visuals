@@ -9,12 +9,12 @@
   <body style="margin: 0; padding: 0; background: #fbe5c3">
     <canvas id="visuals" style="width: 100vw; height: 100vh"></canvas>
     <script type="module">
-      import { render } from './src/main.ts';
+      import { renderVisuals } from './src/main.ts';
 
       const canvas = document.getElementById('visuals');
-      render(window, canvas, {
-        fov: 2.3,
-        cameraHeight: 0.12,
+      renderVisuals(window, canvas, {
+        fov: 2.0,
+        cameraHeight: 0.1,
         edgeColor: '#FFFFFF',
         faceColor: '#FBE5C3',
         birdColor: '#658DA5',

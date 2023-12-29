@@ -30,7 +30,7 @@ void main() {
     distance(v_uv, displacements[1].xz)
   );
   
-  vec4 shadowColor = vec4(u_shadowColor.rgb, 0.4);
+  vec4 shadowColor = mix(u_faceColor, u_shadowColor, 0.1);
   vec2 shadowSizes = heights * shadowRadius - shadowOffset;
   vec2 shadowValues = vec2(
     smoothstep(0.0, clamp(shadowSizes[0], 0.0, 1.0), birdDistances[0]),

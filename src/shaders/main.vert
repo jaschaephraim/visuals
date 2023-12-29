@@ -31,7 +31,7 @@ const float landscapeLineOffset = 0.0001;
 const float noiseFreqA = 3.0;
 const float noiseAmpA = 0.05;
 const float noiseFreqB = 8.0;
-const float noiseAmpB = 0.03;
+const float noiseAmpB = 0.025;
 
 // bird
 mat4 nextBirdDisplacements;

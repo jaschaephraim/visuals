@@ -13,15 +13,19 @@ function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   return aspectRatio;
 }
 
-export function render(
+export function renderVisuals(
   window: Window,
   canvas: HTMLCanvasElement,
-  config: Omit<Config, 'aspectRatio'>
+  config: Omit<Config, 'aspectRatio'>,
+  showStats: boolean = false
 ) {
   const aspectRatio = resizeCanvas(window, canvas);
 
-  const stats = new Stats();
-  canvas.parentElement?.appendChild(stats.dom);
+  let stats: Stats | undefined;
+  if (showStats) {
+    stats = new Stats();
+    canvas.parentElement?.appendChild(stats.dom);
+  }
 
   const webgl = canvas.getContext('webgl2');
   if (!webgl) {
