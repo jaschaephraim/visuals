@@ -3,11 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "format": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "build": "tsc && vite build",
+    "prepare": "husky install",
     "dev": "vite",
     "preview": "vite preview"
   },
@@ -23,6 +26,7 @@
     "eslint-config-airbnb-typescript": "^17.1.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.0",
+    "husky": "^8.0.3",
     "prettier": "^3.1.0",
     "prettier-eslint": "^16.1.2",
     "typescript": "^5.3.2",
