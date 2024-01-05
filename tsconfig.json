@@ -13,6 +13,7 @@
     "paths": {
       "shaders/*": ["./src/shaders/*"]
     },
+    "verbatimModuleSyntax": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

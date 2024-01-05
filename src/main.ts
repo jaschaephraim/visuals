@@ -1,7 +1,7 @@
 import Stats from 'stats.js';
 
 import Scene from './Scene';
-import { Config } from './configs/program-config';
+import type { Config } from './configs/program-config';
 import getSceneConfig from './configs/scene-config';
 
 function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {

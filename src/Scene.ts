@@ -1,7 +1,7 @@
 import Stats from 'stats.js';
 
 import Program from './Program';
-import { SceneConfig } from './types';
+import type { SceneConfig } from './types';
 
 const {
   BLEND,

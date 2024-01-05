@@ -1,7 +1,7 @@
 import fragmentShader from 'shaders/main.frag';
 import vertexShader from 'shaders/main.vert';
 
-import { ProgramConfig, Vector } from '../types';
+import type { ProgramConfig, Vector } from '../types';
 
 const {
   ARRAY_BUFFER,
