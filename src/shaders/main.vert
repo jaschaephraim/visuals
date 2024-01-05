@@ -142,7 +142,7 @@ mat4 getBirdRotation(int birdIndex) {
 
 vec4 getWingTipPosition(int birdIndex) {
   vec4 displacement = v_birdDisplacements[birdIndex];
-  vec4 flapPosition = a_position + sin(flapSpeed * u_t);
+  vec4 flapPosition = a_position + (sin(flapSpeed * u_t) - 0.5) / 1.5;
   return mix(
     flapPosition,
     a_position,
