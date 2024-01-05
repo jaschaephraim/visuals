@@ -37,6 +37,7 @@ const float noiseAmpB = 0.025;
 mat4 nextBirdDisplacements;
 const float birdScale = 0.01;
 const float birdSpeed = 0.0003;
+const float flapSpeed = 0.02;
 const vec3 birdDisplacementScale = vec3(0.4, 0.15, 0.14);
 const vec4 birdOffset = vec4(0.0, 0.2, -0.3, 1.0);
 const mat3 birdNoiseOffsets = mat3(
@@ -139,15 +140,36 @@ mat4 getBirdRotation(int birdIndex) {
   return getBirdRotationMatrix(rotations);
 }
 
-vec4 getVertexPosition(int birdIndex) {
+vec4 getWingTipPosition(int birdIndex) {
+  vec4 displacement = v_birdDisplacements[birdIndex];
+  vec4 flapPosition = a_position + sin(flapSpeed * u_t);
+  return mix(
+    flapPosition,
+    a_position,
+    smoothstep(0.0, 0.5, (displacement.y - birdOffset.y) / birdDisplacementScale.y + 0.5)
+  );
+}
+
+vec4 getBirdVertexPosition(int birdIndex) {
+  return vec4[6](
+    a_position,
+    getWingTipPosition(birdIndex),
+    a_position,
+    a_position,
+    getWingTipPosition(birdIndex),
+    a_position
+  )[gl_VertexID];
+}
+
+vec4 getRotatedVertexForBird(int birdIndex) {
   mat4 rotation = getBirdRotation(birdIndex);
-  return rotation * a_position;
+  return rotation * getBirdVertexPosition(birdIndex);
 }
 
 mat4 getBirdVertexPositions() {
   mat4 vertices = mat4(
-    getVertexPosition(0),
-    getVertexPosition(1),
+    getRotatedVertexForBird(0),
+    getRotatedVertexForBird(1),
     vec4(0),
     vec4(0)
   ) * birdScale;
