@@ -18,6 +18,7 @@ in vec3 a_position;
 out vec2 v_uv;
 out mat4 v_projectionMatrix;
 out mat4 v_birdDisplacements;
+out float v_isBirdVertexValid;
 
 // projection
 const float near = 0.1;
@@ -136,7 +137,7 @@ mat4 getBirdRotation(int birdIndex) {
   vec4 nextDisplacement = nextBirdDisplacements[birdIndex];
   vec4 diff = nextDisplacement - displacement;
 
-  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x ) * 1000.0;
+  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x ) * 1500.0;
   return getBirdRotationMatrix(rotations);
 }
 
@@ -150,6 +151,10 @@ vec4 getWingTipPosition(int birdIndex, vec4 vertexPosition) {
   );
 }
 
+bool getIsBirdVertexValid() {
+  return gl_VertexID < 6;
+}
+
 vec4 getBirdVertexPosition(int birdIndex) {
   vec4 vertexPosition = vec4(a_position, 1.0);
   return vec4[6](
@@ -159,7 +164,7 @@ vec4 getBirdVertexPosition(int birdIndex) {
     vertexPosition,
     getWingTipPosition(birdIndex, vertexPosition),
     vertexPosition
-  )[gl_VertexID];
+  )[gl_VertexID] * float(v_isBirdVertexValid);
 }
 
 vec4 getRotatedVertexForBird(int birdIndex) {
@@ -189,6 +194,7 @@ void main() {
 
   v_birdDisplacements = getBirdDisplacements(u_t);
   nextBirdDisplacements = getBirdDisplacements(u_t + 1.0);
+  v_isBirdVertexValid = float(getIsBirdVertexValid());
 
   vec4 landscapePosition = getLandscapePosition();
   mat4 birdVertexPositions = getBirdVertexPositions();

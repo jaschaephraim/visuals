@@ -1,22 +1,22 @@
 var O = Object.defineProperty;
-var M = (o, e, n) => e in o ? O(o, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : o[e] = n;
-var d = (o, e, n) => (M(o, typeof e != "symbol" ? e + "" : e, n), n);
-var U = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
-function V(o) {
+var V = (o, e, n) => e in o ? O(o, e, { enumerable: !0, configurable: !0, writable: !0, value: n }) : o[e] = n;
+var v = (o, e, n) => (V(o, typeof e != "symbol" ? e + "" : e, n), n);
+var M = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
+function U(o) {
   return o && o.__esModule && Object.prototype.hasOwnProperty.call(o, "default") ? o.default : o;
 }
 var N = { exports: {} };
 (function(o, e) {
   (function(n, t) {
     o.exports = t();
-  })(U, function() {
+  })(M, function() {
     var n = function() {
       function t(f) {
         return r.appendChild(f.dom), f;
       }
       function i(f) {
-        for (var v = 0; v < r.children.length; v++)
-          r.children[v].style.display = v === f ? "block" : "none";
+        for (var d = 0; d < r.children.length; d++)
+          r.children[d].style.display = d === f ? "block" : "none";
         s = f;
       }
       var s = 0, r = document.createElement("div");
@@ -32,8 +32,8 @@ var N = { exports: {} };
         a++;
         var f = (performance || Date).now();
         if (z.update(f - m, 200), f > l + 1e3 && (g.update(1e3 * a / (f - l), 100), l = f, a = 0, _)) {
-          var v = performance.memory;
-          _.update(v.usedJSHeapSize / 1048576, v.jsHeapSizeLimit / 1048576);
+          var d = performance.memory;
+          _.update(d.usedJSHeapSize / 1048576, d.jsHeapSizeLimit / 1048576);
         }
         return f;
       }, update: function() {
@@ -41,17 +41,17 @@ var N = { exports: {} };
       }, domElement: r, setMode: i };
     };
     return n.Panel = function(t, i, s) {
-      var r = 1 / 0, m = 0, l = Math.round, a = l(window.devicePixelRatio || 1), g = 80 * a, z = 48 * a, _ = 3 * a, f = 2 * a, v = 3 * a, p = 15 * a, x = 74 * a, h = 30 * a, b = document.createElement("canvas");
+      var r = 1 / 0, m = 0, l = Math.round, a = l(window.devicePixelRatio || 1), g = 80 * a, z = 48 * a, _ = 3 * a, f = 2 * a, d = 3 * a, x = 15 * a, p = 74 * a, h = 30 * a, b = document.createElement("canvas");
       b.width = g, b.height = z, b.style.cssText = "width:80px;height:48px";
       var c = b.getContext("2d");
-      return c.font = "bold " + 9 * a + "px Helvetica,Arial,sans-serif", c.textBaseline = "top", c.fillStyle = s, c.fillRect(0, 0, g, z), c.fillStyle = i, c.fillText(t, _, f), c.fillRect(v, p, x, h), c.fillStyle = s, c.globalAlpha = 0.9, c.fillRect(v, p, x, h), { dom: b, update: function(S, L) {
-        r = Math.min(r, S), m = Math.max(m, S), c.fillStyle = s, c.globalAlpha = 1, c.fillRect(0, 0, g, p), c.fillStyle = i, c.fillText(l(S) + " " + t + " (" + l(r) + "-" + l(m) + ")", _, f), c.drawImage(b, v + a, p, x - a, h, v, p, x - a, h), c.fillRect(v + x - a, p, a, h), c.fillStyle = s, c.globalAlpha = 0.9, c.fillRect(v + x - a, p, a, l((1 - S / L) * h));
+      return c.font = "bold " + 9 * a + "px Helvetica,Arial,sans-serif", c.textBaseline = "top", c.fillStyle = s, c.fillRect(0, 0, g, z), c.fillStyle = i, c.fillText(t, _, f), c.fillRect(d, x, p, h), c.fillStyle = s, c.globalAlpha = 0.9, c.fillRect(d, x, p, h), { dom: b, update: function(S, L) {
+        r = Math.min(r, S), m = Math.max(m, S), c.fillStyle = s, c.globalAlpha = 1, c.fillRect(0, 0, g, x), c.fillStyle = i, c.fillText(l(S) + " " + t + " (" + l(r) + "-" + l(m) + ")", _, f), c.drawImage(b, d + a, x, p - a, h, d, x, p - a, h), c.fillRect(d + p - a, x, a, h), c.fillStyle = s, c.globalAlpha = 0.9, c.fillRect(d + p - a, x, a, l((1 - S / L) * h));
       } };
     }, n;
   });
 })(N);
 var G = N.exports;
-const q = /* @__PURE__ */ V(G), {
+const q = /* @__PURE__ */ U(G), {
   ARRAY_BUFFER: T,
   COLOR_ATTACHMENT0: k,
   COMPILE_STATUS: $,
@@ -75,14 +75,14 @@ const q = /* @__PURE__ */ V(G), {
 } = WebGL2RenderingContext;
 class ie {
   constructor({ webgl: e, config: n, dimensions: { width: t, height: i } }) {
-    d(this, "webgl");
-    d(this, "config");
-    d(this, "program");
-    d(this, "uniforms", {});
-    d(this, "buffers", {});
-    d(this, "texture", null);
-    d(this, "framebuffer", null);
-    d(this, "positionAttribute");
+    v(this, "webgl");
+    v(this, "config");
+    v(this, "program");
+    v(this, "uniforms", {});
+    v(this, "buffers", {});
+    v(this, "texture", null);
+    v(this, "framebuffer", null);
+    v(this, "positionAttribute");
     this.webgl = e, this.config = n;
     const s = this.webgl.createProgram();
     if (!s)
@@ -248,11 +248,11 @@ class le {
     dimensions: { width: i, height: s },
     stats: r
   }) {
-    d(this, "window");
-    d(this, "webgl");
-    d(this, "config");
-    d(this, "programs", []);
-    d(this, "stats");
+    v(this, "window");
+    v(this, "webgl");
+    v(this, "config");
+    v(this, "programs", []);
+    v(this, "stats");
     this.window = e, this.webgl = n, this.config = t, this.stats = r, this.webgl.enable(ae), this.webgl.enable(oe), this.webgl.blendFunc(fe, ce), this.linkPrograms(i, s);
   }
   run() {
@@ -282,7 +282,7 @@ class le {
     });
   }
 }
-var ve = `#version 300 es
+var de = `#version 300 es
 #extension GL_GOOGLE_include_directive : enable
 
 precision mediump float;
@@ -298,6 +298,7 @@ uniform vec4 u_shadowColor;
 in vec2 v_uv;
 in mat4 v_projectionMatrix;
 in mat4 v_birdDisplacements;
+in float v_isBirdVertexValid;
 out vec4 out_color; 
 
 const float shadowRadius = 0.1;
@@ -322,13 +323,15 @@ void main() {
   );
   vec4 finalColor = mix(shadowColor, u_faceColor, min(shadowValues[0], shadowValues[1]));
 
+  vec4 birdColor = v_isBirdVertexValid * u_birdColor + (1.0 - v_isBirdVertexValid) * vec4(0.0);
+
   out_color = mat4(
     finalColor,
     u_edgeColor,
-    u_birdColor,
-    u_birdColor
+    birdColor,
+    birdColor
   )[u_bufferIndex];
-}`, de = `#version 300 es
+}`, ve = `#version 300 es
 #extension GL_GOOGLE_include_directive : enable
 
 precision mediump float;
@@ -629,6 +632,7 @@ in vec3 a_position;
 out vec2 v_uv;
 out mat4 v_projectionMatrix;
 out mat4 v_birdDisplacements;
+out float v_isBirdVertexValid;
 
 const float near = 0.1;
 const float far = 100.0;
@@ -743,7 +747,7 @@ mat4 getBirdRotation(int birdIndex) {
   vec4 nextDisplacement = nextBirdDisplacements[birdIndex];
   vec4 diff = nextDisplacement - displacement;
 
-  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x ) * 1000.0;
+  vec3 rotations = vec3(-diff.y * 5.0, diff.x, diff.x ) * 1500.0;
   return getBirdRotationMatrix(rotations);
 }
 
@@ -757,6 +761,10 @@ vec4 getWingTipPosition(int birdIndex, vec4 vertexPosition) {
   );
 }
 
+bool getIsBirdVertexValid() {
+  return gl_VertexID < 6;
+}
+
 vec4 getBirdVertexPosition(int birdIndex) {
   vec4 vertexPosition = vec4(a_position, 1.0);
   return vec4[6](
@@ -766,7 +774,7 @@ vec4 getBirdVertexPosition(int birdIndex) {
     vertexPosition,
     getWingTipPosition(birdIndex, vertexPosition),
     vertexPosition
-  )[gl_VertexID];
+  )[gl_VertexID] * float(v_isBirdVertexValid);
 }
 
 vec4 getRotatedVertexForBird(int birdIndex) {
@@ -796,6 +804,7 @@ void main() {
 
   v_birdDisplacements = getBirdDisplacements(u_t);
   nextBirdDisplacements = getBirdDisplacements(u_t + 1.0);
+  v_isBirdVertexValid = float(getIsBirdVertexValid());
 
   vec4 landscapePosition = getLandscapePosition();
   mat4 birdVertexPositions = getBirdVertexPositions();
@@ -811,20 +820,20 @@ void main() {
 }`;
 const {
   ARRAY_BUFFER: ue,
-  ELEMENT_ARRAY_BUFFER: F,
+  ELEMENT_ARRAY_BUFFER: B,
   FLOAT: R,
   FLOAT_VEC4: E,
   FRAGMENT_SHADER: me,
-  INT: B,
+  INT: F,
   LINES: ge,
   TRIANGLES: D,
-  VERTEX_SHADER: pe
+  VERTEX_SHADER: xe
 } = WebGL2RenderingContext, u = 100;
 function C(o) {
   const e = parseInt(o.substring(1, 3), 16) / 255, n = parseInt(o.substring(3, 5), 16) / 255, t = parseInt(o.substring(5, 7), 16) / 255;
   return [e, n, t, 1];
 }
-function xe() {
+function pe() {
   const o = u - 1, e = [];
   for (let n = 0; n < u * u; n++)
     n % u < o && (e.push(n), e.push(n + 1));
@@ -853,13 +862,13 @@ function be({
     shaders: [
       {
         name: "vertex",
-        type: pe,
-        source: de
+        type: xe,
+        source: ve
       },
       {
         name: "fragment",
         type: me,
-        source: ve
+        source: de
       }
     ],
     uniforms: [
@@ -870,12 +879,12 @@ function be({
       },
       {
         name: "u_gridSize",
-        type: B,
+        type: F,
         value: u
       },
       {
         name: "u_bufferIndex",
-        type: B,
+        type: F,
         value: 0
       },
       {
@@ -917,17 +926,17 @@ function be({
     buffers: [
       {
         name: "faces",
-        type: F,
+        type: B,
         mode: D,
         drawCount: 1,
         values: he()
       },
       {
         name: "edges",
-        type: F,
+        type: B,
         mode: ge,
         drawCount: 1,
-        values: xe()
+        values: pe()
       },
       {
         name: "bird",

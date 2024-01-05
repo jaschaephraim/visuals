@@ -14,6 +14,7 @@ uniform vec4 u_shadowColor;
 in vec2 v_uv;
 in mat4 v_projectionMatrix;
 in mat4 v_birdDisplacements;
+in float v_isBirdVertexValid;
 out vec4 out_color; 
 
 const float shadowRadius = 0.1;
@@ -38,10 +39,12 @@ void main() {
   );
   vec4 finalColor = mix(shadowColor, u_faceColor, min(shadowValues[0], shadowValues[1]));
 
+  vec4 birdColor = v_isBirdVertexValid * u_birdColor + (1.0 - v_isBirdVertexValid) * vec4(0.0);
+
   out_color = mat4(
     finalColor,
     u_edgeColor,
-    u_birdColor,
-    u_birdColor
+    birdColor,
+    birdColor
   )[u_bufferIndex];
 }
