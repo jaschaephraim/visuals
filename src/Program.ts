@@ -18,14 +18,12 @@ const {
   INT,
   LINEAR,
   LINK_STATUS,
-  POINTS,
   RGBA,
   STATIC_DRAW,
   TEXTURE_2D,
   TEXTURE_MAG_FILTER,
   TEXTURE_MIN_FILTER,
   TEXTURE0,
-  TRIANGLES,
   UNSIGNED_BYTE,
   UNSIGNED_SHORT,
 } = WebGL2RenderingContext;
@@ -265,18 +263,7 @@ class Program {
           this.webgl.drawElements(mode, values.length, UNSIGNED_SHORT, 0);
           break;
         case ARRAY_BUFFER: {
-          let count = values.length;
-          switch (mode) {
-            case POINTS:
-              count /= 2;
-              break;
-            case TRIANGLES:
-              count /= 3;
-              break;
-            default:
-              throw new Error(`unexpected mode ${mode}`);
-          }
-          this.webgl.drawArrays(mode, 0, count);
+          this.webgl.drawArrays(mode, 0, values.length / 3);
           break;
         }
         default:

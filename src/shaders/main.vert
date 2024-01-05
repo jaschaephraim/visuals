@@ -14,7 +14,7 @@ uniform float u_t;
 uniform float u_fov;
 uniform float u_cameraHeight;
 
-in vec4 a_position;
+in vec3 a_position;
 out vec2 v_uv;
 out mat4 v_projectionMatrix;
 out mat4 v_birdDisplacements;
@@ -140,24 +140,25 @@ mat4 getBirdRotation(int birdIndex) {
   return getBirdRotationMatrix(rotations);
 }
 
-vec4 getWingTipPosition(int birdIndex) {
+vec4 getWingTipPosition(int birdIndex, vec4 vertexPosition) {
   vec4 displacement = v_birdDisplacements[birdIndex];
-  vec4 flapPosition = a_position + (sin(flapSpeed * u_t) - 0.5) / 1.5;
+  vec4 flapPosition = vertexPosition + (sin(flapSpeed * u_t) - 0.5) / 1.5;
   return mix(
     flapPosition,
-    a_position,
+    vertexPosition,
     smoothstep(0.0, 0.5, (displacement.y - birdOffset.y) / birdDisplacementScale.y + 0.5)
   );
 }
 
 vec4 getBirdVertexPosition(int birdIndex) {
+  vec4 vertexPosition = vec4(a_position, 1.0);
   return vec4[6](
-    a_position,
-    getWingTipPosition(birdIndex),
-    a_position,
-    a_position,
-    getWingTipPosition(birdIndex),
-    a_position
+    vertexPosition,
+    getWingTipPosition(birdIndex, vertexPosition),
+    vertexPosition,
+    vertexPosition,
+    getWingTipPosition(birdIndex, vertexPosition),
+    vertexPosition
   )[gl_VertexID];
 }
 

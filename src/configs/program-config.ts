@@ -176,7 +176,7 @@ function getConfig({
           0, 0, 0.2,
           1, 0.5, 0,
           0, 0, -0.2,
-        ]),
+        ].concat(Array(GRID_SIZE * GRID_SIZE * 6 - 18).fill(0))),
       },
     ],
   };
