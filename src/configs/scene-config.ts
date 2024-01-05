@@ -1,5 +1,5 @@
-import { SceneConfig } from '../types';
 import getProgramConfig, { Config } from './program-config';
+import { SceneConfig } from '../types';
 
 function getConfig(config: Config): SceneConfig {
   return {

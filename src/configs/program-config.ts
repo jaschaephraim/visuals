@@ -1,5 +1,6 @@
 import fragmentShader from 'shaders/main.frag';
 import vertexShader from 'shaders/main.vert';
+
 import { ProgramConfig, Vector } from '../types';
 
 const {
@@ -17,9 +18,9 @@ const {
 const GRID_SIZE = 100;
 
 function hexToRgb(hex: string): Vector {
-  let r = parseInt(hex.substring(1, 3), 16) / 255;
-  let g = parseInt(hex.substring(3, 5), 16) / 255;
-  let b = parseInt(hex.substring(5, 7), 16) / 255;
+  const r = parseInt(hex.substring(1, 3), 16) / 255;
+  const g = parseInt(hex.substring(3, 5), 16) / 255;
+  const b = parseInt(hex.substring(5, 7), 16) / 255;
   return [r, g, b, 1];
 }
 

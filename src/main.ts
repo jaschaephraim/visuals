@@ -1,12 +1,14 @@
 import Stats from 'stats.js';
 
 import Scene from './Scene';
-import getSceneConfig from './configs/scene-config';
 import { Config } from './configs/program-config';
+import getSceneConfig from './configs/scene-config';
 
 function resizeCanvas(window: Window, canvas: HTMLCanvasElement) {
   const boundary = canvas.getBoundingClientRect();
+  // eslint-disable-next-line no-param-reassign
   canvas.width = boundary.width * window.devicePixelRatio;
+  // eslint-disable-next-line no-param-reassign
   canvas.height = boundary.height * window.devicePixelRatio;
 
   const aspectRatio = canvas.width / canvas.height;

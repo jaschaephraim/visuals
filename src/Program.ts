@@ -249,12 +249,13 @@ class Program {
 
   private drawBuffer(
     { name, type, mode, drawCount, values }: BufferConfig,
-    bufferIndex: number
+    initialBufferIndex: number
   ) {
     const buffer = this.getBuffer(name);
     this.webgl.bindBuffer(type, buffer);
     const bufferIndexUniform = this.getUniform('u_bufferIndex');
 
+    let bufferIndex = initialBufferIndex;
     for (let i = 0; i < drawCount; i++) {
       this.webgl.uniform1i(bufferIndexUniform, bufferIndex);
       switch (type) {
